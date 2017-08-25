@@ -17,6 +17,7 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     # node's build scripts find and use MSVC 2015, regardless of conda's setting.
     - vs2015_runtime  # [win]
     - python          2.7.*
