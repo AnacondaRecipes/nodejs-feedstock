@@ -38,6 +38,14 @@ about:
   home: https://nodejs.org/
   license: MIT
   summary: a platform for easily building fast, scalable network applications
+  description: |
+    Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine. 
+    Node.js uses an event-driven, non-blocking I/O model that makes it 
+    lightweight and efficient. Node.js' package ecosystem, npm, is the 
+    largest ecosystem of open source libraries in the world.
+  doc_url: https://nodejs.org/en/docs/
+  dev_url: https://github.com/nodejs/node
+  doc_source_url: https://github.com/nodejs/node/tree/master/doc
 
 extra:
   recipe-maintainers:
