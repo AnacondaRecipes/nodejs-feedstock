@@ -8,6 +8,8 @@ source:
   fn: node-v{{ version }}.tar.gz
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz
   sha256: 20146ed51b638404665737ed8a25cc06e96d7d7259eb90a4bdec4730a78002a6
+  patches:
+    - 0001-macOS-use-MACOSX_DEPLOYMENT_TARGET-10.9.patch
 
 build:
   number: 0
