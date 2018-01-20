@@ -25,7 +25,7 @@ requirements:
     - python          2.7.*
   run:
     - vs2015_runtime   # [win]
-    - libgcc           # [linux]
+    - libgcc           # [linux and (not ppc64le)]
 
 test:
   commands:
