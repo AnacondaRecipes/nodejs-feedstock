@@ -1,4 +1,4 @@
-{% set version = "8.12.0" %}
+{% set version = "10.13.0" %}
 
 package:
   name: nodejs
@@ -7,7 +7,7 @@ package:
 source:
   fn: node-v{{ version }}.tar.gz
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz
-  sha256: b4797843136edd9195c28221a1680ae52c29d867fc5fc1c99f7d6e2f2126a67b
+  sha256: aa06825fff375ece7c0d881ae0de5d402a857e8cabff9b4a50f2f0b7b44906be
   patches:
     - 0001-macOS-use-MACOSX_DEPLOYMENT_TARGET-10.9.patch
 
@@ -21,14 +21,16 @@ build:
 
 requirements:
   build:
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
+    - {{ compiler('c') }}  # [not win]
+    - {{ compiler('cxx') }}  # [not win]
     # node's build scripts find and use MSVC 2015, regardless of conda's setting.
-    - vs2015_runtime  # [win]
     - python          2.7.*
     - make            # [unix]
+    - nasm            # [win]
+  host:
+    - vs2015_runtime  # [win]
   run:
-    - vs2015_runtime   # [win]
+    - vs2015_runtime  # [win]
 
 test:
   commands:
