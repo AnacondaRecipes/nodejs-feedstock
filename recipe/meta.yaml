@@ -1,4 +1,4 @@
-{% set version = "10.13.0" %}
+{% set version = "14.16.0" %}
 
 package:
   name: nodejs
@@ -7,7 +7,7 @@ package:
 source:
   fn: node-v{{ version }}.tar.gz
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz
-  sha256: aa06825fff375ece7c0d881ae0de5d402a857e8cabff9b4a50f2f0b7b44906be
+  sha256: f6b904b06951de4c52089dd4456155d853e835b0dc4640f75458c6eb49f9e8ce
   patches:
     - 0001-macOS-use-MACOSX_DEPLOYMENT_TARGET-10.9.patch
 
