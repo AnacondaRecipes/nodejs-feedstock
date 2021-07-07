@@ -24,9 +24,11 @@ requirements:
     - {{ compiler('c') }}  # [not win]
     - {{ compiler('cxx') }}  # [not win]
     # node's build scripts find and use MSVC 2015, regardless of conda's setting.
-    - python          2.7.*
+    - python          
     - make            # [unix]
     - nasm            # [win]
+    - patch           # [not win]
+    - m2-patch        # [win]
   host:
     - vs2015_runtime  # [win]
   run:
