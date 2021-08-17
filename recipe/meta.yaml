@@ -1,4 +1,7 @@
-{% set version = "10.13.0" %}
+{% set version = "16.6.1" %}
+
+# NODE_MODULE_VERSION set in src/node_version.h
+{% set NODE_MODULE_VERSION = 93 %}
 
 package:
   name: nodejs
@@ -6,31 +9,46 @@ package:
 
 source:
   fn: node-v{{ version }}.tar.gz
-  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz
-  sha256: aa06825fff375ece7c0d881ae0de5d402a857e8cabff9b4a50f2f0b7b44906be
+  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [not win]
+  sha256: 36467b8a4e7e3bacc2f4f1709a83b0506429d1999bc461e5e363bc91d3437c09  # [not win]
+  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
+  sha256: ec5dce1e182172cc7edc8d56c377f4d106232b2b14127bd2a1565497448504e9  # [win]
   patches:
-    - 0001-macOS-use-MACOSX_DEPLOYMENT_TARGET-10.9.patch
+    - linux-librt.patch  # [not win]
+    - cinttypes.patch  # [linux]
+    - less-shared-intermediate.patch  # [build_platform != target_platform]
+    - 0001-Use-HOST-instead-of-TARGET-to-determine-thread-conte.patch  # [build_platform != target_platform]
+    - 0001-Forward-ceilf-floorf.patch  # [not win]
 
 build:
   number: 0
-  ignore_prefix_files:
-    - bin/node
-  missing_dso_whitelist:          # [linux]
-    # Required by node_modules/term-size/vendor/macos/term-size
-    - /usr/lib/libSystem.B.dylib  # [linux]
+  # Prefix replacement breaks in the binary embedded configurations.
+  detect_binary_files_with_prefix: false
 
 requirements:
   build:
     - {{ compiler('c') }}  # [not win]
     - {{ compiler('cxx') }}  # [not win]
-    # node's build scripts find and use MSVC 2015, regardless of conda's setting.
-    - python          2.7.*
-    - make            # [unix]
-    - nasm            # [win]
+    - python 3.7  # [not (win or (osx and arm64))]
+    - python 3.8  # [osx and arm64]
+    - git  # [linux]
+    - ninja  # [not win]
+    - pkg-config  # [not win]
   host:
     - vs2015_runtime  # [win]
+    - icu >=65  # [not win]
+    - libuv >=1.33  # [not win]
+    - openssl  >=1.1.1d  # [not win]
+    - zlib  # [not win]
   run:
     - vs2015_runtime  # [win]
+    - icu  # [not win]
+    - libuv  # [not win]
+    - openssl  # [not win]
+    - zlib  # [not win]
+  run_constrained:   # [osx]
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}   # [osx and x86_64]
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.15") }}  # [osx and arm64]
 
 test:
   commands:
@@ -40,6 +58,8 @@ test:
     - npm install -h
     - npm config get prefix -g
     - test $(echo "console.log(1 + 3)" | node) == 4  # [not win]
+    - test -f $PREFIX/lib/libnode.{{ NODE_MODULE_VERSION }}.dylib  # [osx]
+    - test -f $PREFIX/lib/libnode.so.{{ NODE_MODULE_VERSION }}  # [linux]
 
 about:
   home: https://nodejs.org/
@@ -52,3 +72,6 @@ extra:
     - minrk
     - msarahan
     - pelson
+    - blink1073
+    - xhochy
+    - katietz
