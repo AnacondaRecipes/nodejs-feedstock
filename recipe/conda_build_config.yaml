@@ -1,12 +1,11 @@
-c_compiler:
-  - vs2015  # [win]
-  - gcc  # [linux]
-cxx_compiler:
-  - vs2015  # [win]
-MACOSX_DEPLOYMENT_TARGET:
-  - '10.11'  # [osx]
-macos_min_version:
-  - '10.11'  # [osx]
+MACOSX_DEPLOYMENT_TARGET:  # [osx]
+  - '10.14'  # [osx and x86_64]
+  - '10.15'  # [osx and arm64]
+macos_min_version:  # [osx]
+  - '10.14'  # [osx and x86_64]
+  - '10.15'  # [osx and arm64]
+CONDA_BUILD_SYSROOT:            # [osx and x86_64]
+  - /opt/MacOSX10.14.sdk        # [osx and x86_64]
 
 pin_run_as_build:
   # libuv is missing run_exports

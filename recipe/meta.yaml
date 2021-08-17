@@ -34,6 +34,8 @@ requirements:
     - git  # [linux]
     - ninja  # [not win]
     - pkg-config  # [not win]
+    - patch     # [not win]
+    - m2-patch  # [win]
   host:
     - vs2015_runtime  # [win]
     - icu >=65  # [not win]
