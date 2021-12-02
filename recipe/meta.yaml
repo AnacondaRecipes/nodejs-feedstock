@@ -10,7 +10,7 @@ package:
 source:
   fn: node-v{{ version }}.tar.gz
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [not win]
-  sha256: a9147e9a86f8420893bafc4ef041e578795dc5874b9dccdd731699613b8a60ab  # [not win]
+  sha256: 34b23965457fb08a8c62f81e8faf74ea60587cda6fa898e5d030211f5f374cb6  # [not win]
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
   sha256: a9147e9a86f8420893bafc4ef041e578795dc5874b9dccdd731699613b8a60ab  # [win]
   patches:
@@ -40,7 +40,7 @@ requirements:
     - vs2015_runtime  # [win]
     - icu >=65  # [not win]
     - libuv >=1.33  # [not win]
-    - openssl  >=1.1.1d  # [not win]
+    - openssl >=1.1.1d  # [not win]
     - zlib  # [not win]
   run:
     - vs2015_runtime  # [win]
