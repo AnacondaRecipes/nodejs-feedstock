@@ -16,9 +16,8 @@ source:
   patches:
     - linux-librt.patch  # [not win]
     - cinttypes.patch  # [linux]
-    - less-shared-intermediate.patch  # [build_platform != target_platform]
-    - 0001-Use-HOST-instead-of-TARGET-to-determine-thread-conte.patch  # [build_platform != target_platform]
     - 0001-Forward-ceilf-floorf.patch  # [not win]
+    - 0001-Force-include-handler-outside-simulator.patch  # [osx and arm64]
 
 build:
   number: 0
@@ -66,6 +65,7 @@ test:
 about:
   home: https://nodejs.org/
   license: MIT
+  license_family: MIT
   license_file: LICENSE
   summary: a platform for easily building fast, scalable network applications
 
