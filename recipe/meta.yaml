@@ -21,6 +21,7 @@ source:
 
 build:
   number: 0
+  # Anaconda doesn't provide nodejs on s390x because it's not included in SOW packages
   skip: True  # [s390x]
   # Prefix replacement breaks in the binary embedded configurations.
   detect_binary_files_with_prefix: false
