@@ -61,6 +61,7 @@ test:
 about:
   home: https://nodejs.org/
   license: MIT
+  license_family: MIT
   license_file: LICENSE
   summary: a platform for easily building fast, scalable network applications
 
