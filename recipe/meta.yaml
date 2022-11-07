@@ -1,4 +1,4 @@
-{% set version = "16.13.1" %}
+{% set version = "19.0.1" %}
 
 # NODE_MODULE_VERSION set in src/node_version.h
 {% set NODE_MODULE_VERSION = 93 %}
@@ -10,9 +10,9 @@ package:
 source:
   fn: node-v{{ version }}.tar.gz
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [not win]
-  sha256: 34b23965457fb08a8c62f81e8faf74ea60587cda6fa898e5d030211f5f374cb6  # [not win]
+  sha256: 6524eb35e1b3c1fc128f9fb6c9ecd92aaba64261fa411aeec6a193019791a51b  # [not win]
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: a9147e9a86f8420893bafc4ef041e578795dc5874b9dccdd731699613b8a60ab  # [win]
+  sha256: a15925b346cb6906b916c4e18373e3311d921cf4de17b14e041ff238fc9639e0  # [win]
   patches:
     - linux-librt.patch  # [not win]
     - cinttypes.patch  # [linux]
@@ -39,9 +39,9 @@ requirements:
     - m2-patch  # [win]
   host:
     - vs2015_runtime  # [win]
-    - icu >=65  # [not win]
-    - libuv >=1.33  # [not win]
-    - openssl >=1.1.1d  # [not win]
+    - icu  # [not win]
+    - libuv  # [not win]
+    - openssl  # [not win]
     - zlib  # [not win]
   run:
     - vs2015_runtime  # [win]
@@ -70,7 +70,11 @@ about:
   license_family: MIT
   license_file: LICENSE
   summary: a platform for easily building fast, scalable network applications
-
+  description: |
+    Node.js is an open-source, cross-platform JavaScript runtime environment.
+  doc_url: https://nodejs.org/en/docs/
+  doc_source_url: https://github.com/nodejs/node/releases
+  dev_url: https://nodejs.org/en/docs/guides/
 extra:
   recipe-maintainers:
     - minrk
