@@ -1,0 +1,11 @@
+Lower the minimum icu version for compatibility with current cbc setting.
+
+diff --git a/tools/icu/icu_versions.json b/tools/icu/icu_versions.json
+index e3be402472..08af84e5ed 100644
+--- a/tools/icu/icu_versions.json
++++ b/tools/icu/icu_versions.json
+@@ -1,3 +1,3 @@
+ {
+-    "minimum_icu": 69
++    "minimum_icu": 58
+ }
