@@ -18,7 +18,6 @@ source:
     - cinttypes.patch  # [linux]
     - less-shared-intermediate.patch  # [not win]
     - 0001-Forward-ceilf-floorf.patch  # [not win]
-    - override_minimum_icu.patch  # [not win]
 
 build:
   number: 0
@@ -37,14 +36,18 @@ requirements:
     - pkg-config  # [not win]
     - patch     # [not win]
   host:
-    - icu 58        # [not (win or s390x or aarch64 or (osx and arm64))]
-    - icu 68        # [s390x or aarch64 or (osx and arm64)]
-    - libuv 1.40    # [not win and not (osx and arm64)]
-    - libuv 1.39    # [osx and arm64]
+    # icu min version is 69. It won't compile without this minumum version.
+    # until the distribution gets updated to a new icu, internationalization is disabled. 
+    # - icu 58        # [not (win or s390x or aarch64 or (osx and arm64))]
+    # - icu 68        # [s390x or aarch64 or (osx and arm64)]
+    - libuv 1.44    # [not win]
     - openssl 1.1.1 # [not win]
     - zlib 1.2      # [not win]
   run:
-    - icu  # [not win]
+    # icu min version is 69. It won't compile without this minumum version.
+    # until the distribution gets updated to a new icu, internationalization is disabled. 
+    - icu >=58,<59.0a0        # [not (win or s390x or aarch64 or (osx and arm64))]
+    - icu >=68,<69.0a0      # [s390x or aarch64 or (osx and arm64)]
     - libuv  # [not win]
     - openssl  # [not win]
     - zlib  # [not win]

@@ -38,7 +38,10 @@ export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
     --shared-libuv \
     --shared-openssl \
     --shared-zlib \
-    --with-intl=system-icu
+    --with-intl=none
+    # --with-intl=system-icu
+    # icu min version is 69. It won't compile without this minumum version.
+    # until the distribution gets updated to a new icu, internationalization is disabled.
 
 if [ "$(uname -m)" = "ppc64le" ]; then
     # Decrease parallelism a bit as we will otherwise get out-of-memory problems
