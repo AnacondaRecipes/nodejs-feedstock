@@ -11,6 +11,12 @@ if [ "$(uname)" = "Darwin" ]; then
 else
     # need librt for clock_gettime with nodejs >= 12.12
     export LDFLAGS="$LDFLAGS -lrt"
+    echo "LDFLAGS=$LDFLAGS"
+fi
+if [ "$(uname -m)" = "ppc64le" ]; then
+    # this is ugly but the package seems usable at least
+    export CXXFLAGS="${CXXFLAGS} -fpermissive"
+    echo "CXXFLAGS=$CXXFLAGS"
 fi
 
 EXTRA_ARGS=
@@ -44,6 +50,10 @@ export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
     # until the distribution gets updated to a new icu, internationalization is disabled.
 
 if [ "$(uname -m)" = "ppc64le" ]; then
+    for ninja_build in `find out/Release/obj.host/ -name '*.ninja'`; do
+      sed -ie 's/-mminimal-toc//g' ${ninja_build}
+    done
+
     # Decrease parallelism a bit as we will otherwise get out-of-memory problems
     echo "Using $(grep -c ^processor /proc/cpuinfo) CPUs"
     CPU_COUNT=$(grep -c ^processor /proc/cpuinfo)
