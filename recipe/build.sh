@@ -13,11 +13,6 @@ else
     export LDFLAGS="$LDFLAGS -lrt"
     echo "LDFLAGS=$LDFLAGS"
 fi
-if [ "$(uname -m)" = "ppc64le" ]; then
-    # this is ugly but the package seems usable at least
-    export CXXFLAGS="${CXXFLAGS} -fpermissive"
-    echo "CXXFLAGS=$CXXFLAGS"
-fi
 
 EXTRA_ARGS=
 
@@ -46,7 +41,7 @@ export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
     --shared-zlib \
     --with-intl=none
     # --with-intl=system-icu
-    # icu min version is 69. It won't compile without this minumum version.
+    # icu min version is 69. It won't compile without this minimum version.
     # until the distribution gets updated to a new icu, internationalization is disabled.
 
 if [ "$(uname -m)" = "ppc64le" ]; then
