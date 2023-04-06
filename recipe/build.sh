@@ -27,14 +27,10 @@ export CXX_host=$CXX_FOR_BUILD
 export AR_host=$($CC_FOR_BUILD -print-prog-name=ar)
 export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
 
-# The without snapshot comes from the error in
-# https://github.com/nodejs/node/issues/4212.
 ./configure \
     ${EXTRA_ARGS} \
     --ninja \
     --prefix=${PREFIX} \
-    --without-snapshot \
-    --without-node-snapshot \
     --shared \
     --shared-libuv \
     --shared-openssl \
