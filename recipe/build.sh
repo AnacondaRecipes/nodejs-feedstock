@@ -11,6 +11,7 @@ if [ "$(uname)" = "Darwin" ]; then
 else
     # need librt for clock_gettime with nodejs >= 12.12
     export LDFLAGS="$LDFLAGS -lrt"
+    echo "LDFLAGS=$LDFLAGS"
 fi
 
 EXTRA_ARGS=
@@ -26,21 +27,24 @@ export CXX_host=$CXX_FOR_BUILD
 export AR_host=$($CC_FOR_BUILD -print-prog-name=ar)
 export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
 
-# The without snapshot comes from the error in
-# https://github.com/nodejs/node/issues/4212.
 ./configure \
     ${EXTRA_ARGS} \
     --ninja \
     --prefix=${PREFIX} \
-    --without-snapshot \
-    --without-node-snapshot \
     --shared \
     --shared-libuv \
     --shared-openssl \
     --shared-zlib \
-    --with-intl=system-icu
+    --with-intl=none
+    # --with-intl=system-icu
+    # icu min version is 69. It won't compile without this minimum version.
+    # until the distribution gets updated to a new icu, internationalization is disabled.
 
 if [ "$(uname -m)" = "ppc64le" ]; then
+    for ninja_build in `find out/Release/obj.host/ -name '*.ninja'`; do
+      sed -ie 's/-mminimal-toc//g' ${ninja_build}
+    done
+
     # Decrease parallelism a bit as we will otherwise get out-of-memory problems
     echo "Using $(grep -c ^processor /proc/cpuinfo) CPUs"
     CPU_COUNT=$(grep -c ^processor /proc/cpuinfo)

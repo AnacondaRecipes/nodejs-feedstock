@@ -1,0 +1,15 @@
+On ppc64le with gcc 8, captured maybe_receiver is somewhat const, resulting in compiation error.
+
+diff --git a/deps/v8/src/builtins/builtins-call-gen.cc b/deps/v8/src/builtins/builtins-call-gen.cc
+index 8b7b364375..81d353928f 100644
+--- a/deps/v8/src/builtins/builtins-call-gen.cc
++++ b/deps/v8/src/builtins/builtins-call-gen.cc
+@@ -489,7 +489,7 @@ void CallOrConstructBuiltinsAssembler::CallReceiver(
+   auto feedback_vector = LoadFeedbackVectorFromBaseline();
+   LazyNode<Object> receiver = [=] {
+     if (maybe_receiver) {
+-      return *maybe_receiver;
++      return *const_cast<base::Optional<TNode<Object> > &>(maybe_receiver);
+     } else {
+       CodeStubArguments args(this, argc);
+       return args.GetReceiver();

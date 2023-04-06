@@ -1,23 +1,24 @@
-{% set version = "16.13.1" %}
+{% set version = "18.15.0" %}
 
 # NODE_MODULE_VERSION set in src/node_version.h
-{% set NODE_MODULE_VERSION = 93 %}
+{% set NODE_MODULE_VERSION = 108 %}
 
 package:
   name: nodejs
   version: {{ version }}
 
 source:
-  fn: node-v{{ version }}.tar.gz
-  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [not win]
-  sha256: 34b23965457fb08a8c62f81e8faf74ea60587cda6fa898e5d030211f5f374cb6  # [not win]
+  # checksums from https://nodejs.org/dist/vX.Y.Z/SHASUMS256.txt.asc
+  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
+  sha256: d65c4c3ef3c8815bccda9502081a29458c7c80797db0763f8752f270a824ac2b  # [unix]
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: a9147e9a86f8420893bafc4ef041e578795dc5874b9dccdd731699613b8a60ab  # [win]
-  patches:
+  sha256: 118fbcae58bc8c53cbe97a10c019734ed90685da8dda98aa0b0f4aeead42a647  # [win]
+  patches:  # [not win]
     - linux-librt.patch  # [not win]
     - cinttypes.patch  # [linux]
+    - less-shared-intermediate.patch  # [not win]
     - 0001-Forward-ceilf-floorf.patch  # [not win]
-    - 0001-Force-include-handler-outside-simulator.patch  # [osx and arm64]
+    - 0002-ppc64le-remove-const.patch  # [ppc64le]
 
 build:
   number: 0
@@ -30,22 +31,24 @@ requirements:
   build:
     - {{ compiler('c') }}  # [not win]
     - {{ compiler('cxx') }}  # [not win]
-    - python 3.7  # [not (win or (osx and arm64))]
-    - python 3.8  # [osx and arm64]
+    - python 3.8  # [not win]
     - git  # [linux]
     - ninja  # [not win]
     - pkg-config  # [not win]
     - patch     # [not win]
-    - m2-patch  # [win]
   host:
-    - vs2015_runtime  # [win]
-    - icu >=65  # [not win]
-    - libuv >=1.33  # [not win]
-    - openssl >=1.1.1d  # [not win]
-    - zlib  # [not win]
+    # icu min version is 69. It won't compile without this minumum version.
+    # until the distribution gets updated to a new icu, internationalization is disabled. 
+    # - icu 58        # [not (win or s390x or aarch64 or (osx and arm64))]
+    # - icu 68        # [s390x or aarch64 or (osx and arm64)]
+    - libuv 1.44    # [not win]
+    - openssl 1.1.1 # [not win]
+    - zlib 1.2      # [not win]
   run:
-    - vs2015_runtime  # [win]
-    - icu  # [not win]
+    # icu min version is 69. It won't compile without this minumum version.
+    # until the distribution gets updated to a new icu, internationalization is disabled. 
+    - icu >=58,<59.0a0        # [not (win or s390x or aarch64 or (osx and arm64))]
+    - icu >=68,<69.0a0      # [s390x or aarch64 or (osx and arm64)]
     - libuv  # [not win]
     - openssl  # [not win]
     - zlib  # [not win]
@@ -69,7 +72,13 @@ about:
   license: MIT
   license_family: MIT
   license_file: LICENSE
-  summary: a platform for easily building fast, scalable network applications
+  summary: Node.js is an open-source, cross-platform JavaScript runtime environment.
+  description: |
+    Node.js is an open-source, cross-platform JavaScript runtime environment.
+    As an asynchronous event-driven JavaScript runtime, Node.js is designed to 
+    build scalable network applications.
+  doc_url: https://nodejs.org/en/docs/
+  dev_url: https://github.com/nodejs/node
 
 extra:
   recipe-maintainers:
