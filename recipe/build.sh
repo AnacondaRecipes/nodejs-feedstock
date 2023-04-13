@@ -16,6 +16,12 @@ else
     echo "LDFLAGS=$LDFLAGS"
 fi
 
+# disable crypto builtin-instructions
+if [[ ${target_platform} == linux-ppc64le ]]; then
+  export CFLAGS="${CFLAGS} -mno-crypto"
+  export CXXFLAGS="${CXXFLAGS} -mno-crypto"
+fi
+
 EXTRA_ARGS=
 
 if [[ $target_platform == osx-arm64 ]]; then
