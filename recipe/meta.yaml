@@ -21,7 +21,7 @@ source:
     - 0002-ppc64le-remove-const.patch  # [ppc64le]
 
 build:
-  number: 0
+  number: 1
   # Anaconda doesn't provide nodejs on s390x because it's not included in SOW packages
   skip: True  # [s390x]
   # Prefix replacement breaks in the binary embedded configurations.
@@ -36,6 +36,8 @@ requirements:
     - ninja  # [not win]
     - pkg-config  # [not win]
     - patch     # [not win]
+    - llvm-utils  # [osx]
+    - binutils    # [linux]
   host:
     # icu min version is 69. It won't compile without this minumum version.
     # until the distribution gets updated to a new icu, internationalization is disabled. 
