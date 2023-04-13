@@ -36,7 +36,7 @@ requirements:
     - ninja  # [not win]
     - pkg-config  # [not win]
     - patch     # [not win]
-    - llvm-utils  # [osx]
+    - llvm-tools  # [osx]
     - binutils    # [linux]
   host:
     # icu min version is 69. It won't compile without this minumum version.
