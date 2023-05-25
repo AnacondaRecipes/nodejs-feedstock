@@ -1,4 +1,4 @@
-{% set version = "18.15.0" %}
+{% set version = "18.16.0" %}
 
 # NODE_MODULE_VERSION set in src/node_version.h
 {% set NODE_MODULE_VERSION = 108 %}
@@ -10,9 +10,9 @@ package:
 source:
   # checksums from https://nodejs.org/dist/vX.Y.Z/SHASUMS256.txt.asc
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: d65c4c3ef3c8815bccda9502081a29458c7c80797db0763f8752f270a824ac2b  # [unix]
+  sha256: 6a4f5c5d76e5c50cef673099e56f19bc3266ae363f56ca0ab77dd2f3c5088c6d  # [unix]
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: 118fbcae58bc8c53cbe97a10c019734ed90685da8dda98aa0b0f4aeead42a647  # [win]
+  sha256: 4b3bd4cb5570cc217490639e93a7e1b7a7a341981366661e514ce61941824a85  # [win]
   patches:  # [not win]
     - linux-librt.patch  # [not win]
     - cinttypes.patch  # [linux]
@@ -32,7 +32,6 @@ requirements:
     - {{ compiler('c') }}  # [not win]
     - {{ compiler('cxx') }}  # [not win]
     - python 3.8  # [not win]
-    - git  # [linux]
     - ninja  # [not win]
     - pkg-config  # [not win]
     - patch     # [not win]
@@ -42,7 +41,7 @@ requirements:
     # - icu 58        # [not (win or s390x or aarch64 or (osx and arm64))]
     # - icu 68        # [s390x or aarch64 or (osx and arm64)]
     - libuv 1.44    # [not win]
-    - openssl 1.1.1 # [not win]
+    - openssl {{ openssl }} # [not win]
     - zlib 1.2      # [not win]
     - icu {{ icu }}
   run:
@@ -50,7 +49,7 @@ requirements:
     # until the distribution gets updated to a new icu, internationalization is disabled. 
     - {{ pin_compatible('icu') }}
     - libuv  # [not win]
-    - openssl  # [not win]
+    - openssl 3.*  # [not win]
     - zlib  # [not win]
   run_constrained:   # [osx]
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}   # [osx and x86_64]
