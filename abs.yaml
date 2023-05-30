@@ -1,0 +1,8 @@
+channels:
+  icu73: icu73
+
+aggregate_branch: icu-73.1
+
+build_parameters:
+  - "--suppress-variables"
+  - "--error-overlinking"
