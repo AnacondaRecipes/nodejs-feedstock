@@ -36,7 +36,7 @@ export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
     --shared-openssl \
     --shared-zlib \
     --with-intl=none
-    # --with-intl=system-icu
+    --with-intl=system-icu
     # icu min version is 69. It won't compile without this minimum version.
     # until the distribution gets updated to a new icu, internationalization is disabled.
 
