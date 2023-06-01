@@ -44,6 +44,7 @@ requirements:
     - libuv 1.44    # [not win]
     - openssl 1.1.1 # [not win]
     - zlib 1.2      # [not win]
+    - icu 73.1
   run:
     # icu min version is 69. It won't compile without this minumum version.
     # until the distribution gets updated to a new icu, internationalization is disabled. 
