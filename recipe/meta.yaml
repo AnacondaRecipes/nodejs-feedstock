@@ -48,8 +48,7 @@ requirements:
   run:
     # icu min version is 69. It won't compile without this minumum version.
     # until the distribution gets updated to a new icu, internationalization is disabled. 
-    - icu >=58,<=73.1      # [not (win or s390x or aarch64 or (osx and arm64))]
-    - icu >=68,<=73.1      # [s390x or aarch64 or (osx and arm64)]
+    - {{ pin_compatible('icu') }}
     - libuv  # [not win]
     - openssl  # [not win]
     - zlib  # [not win]
