@@ -41,7 +41,7 @@ requirements:
     # - icu 58        # [not (win or s390x or aarch64 or (osx and arm64))]
     # - icu 68        # [s390x or aarch64 or (osx and arm64)]
     - libuv 1.44    # [not win]
-    - openssl {{ openssl }} # [not win]
+    - openssl 3.0 # [not win]
     - zlib 1.2      # [not win]
     - icu {{ icu }}
   run:
