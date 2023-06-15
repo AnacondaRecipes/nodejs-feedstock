@@ -41,7 +41,7 @@ requirements:
     # - icu 58        # [not (win or s390x or aarch64 or (osx and arm64))]
     # - icu 68        # [s390x or aarch64 or (osx and arm64)]
     - libuv 1.44    # [not win]
-    - openssl 3.0 # [not win]
+    - openssl {{ openssl }} # [not win]
     - zlib 1.2      # [not win]
     - icu {{ icu }}
   run:
@@ -49,7 +49,7 @@ requirements:
     # until the distribution gets updated to a new icu, internationalization is disabled. 
     - {{ pin_compatible('icu') }}
     - libuv  # [not win]
-    - openssl 3.*  # [not win]
+    - openssl # [not win]
     - zlib  # [not win]
   run_constrained:   # [osx]
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}   # [osx and x86_64]
