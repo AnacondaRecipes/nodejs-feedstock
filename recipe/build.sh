@@ -27,7 +27,7 @@ export CXX_host=$CXX_FOR_BUILD
 export AR_host=$($CC_FOR_BUILD -print-prog-name=ar)
 export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
 
-./configure \
+"${SRC_DIR}"/configure \
     ${EXTRA_ARGS} \
     --ninja \
     --prefix=${PREFIX} \
@@ -35,10 +35,7 @@ export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
     --shared-libuv \
     --shared-openssl \
     --shared-zlib \
-    --with-intl=none
-    # --with-intl=system-icu
-    # icu min version is 69. It won't compile without this minimum version.
-    # until the distribution gets updated to a new icu, internationalization is disabled.
+    --with-intl=system-icu
 
 if [ "$(uname -m)" = "ppc64le" ]; then
     for ninja_build in `find out/Release/obj.host/ -name '*.ninja'`; do
