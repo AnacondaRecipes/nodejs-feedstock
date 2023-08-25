@@ -21,7 +21,7 @@ source:
     - 0002-ppc64le-remove-const.patch  # [ppc64le]
 
 build:
-  number: 0
+  number: 1
   # Anaconda doesn't provide nodejs on s390x because it's not included in SOW packages
   skip: True  # [s390x]
   # Prefix replacement breaks in the binary embedded configurations.
