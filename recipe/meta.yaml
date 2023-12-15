@@ -36,7 +36,7 @@ requirements:
     - patch     # [not win]
   host:
     - libuv 1.44    # [not win]
-    - openssl # [not win]
+    - openssl {{ openssl }} # [not win]
     - zlib 1.2      # [not win]
     - icu 73
   run:
