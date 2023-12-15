@@ -7,12 +7,6 @@ macos_min_version:  # [osx]
 CONDA_BUILD_SYSROOT:            # [osx and x86_64]
   - /opt/MacOSX10.14.sdk        # [osx and x86_64]
 
-# Use gcc 8 for ppc64le
-c_compiler_version:            # [ppc64le]
-  - 8                          # [ppc64le]
-cxx_compiler_version:          # [ppc64le]
-  - 8                          # [ppc64le]
-
 pin_run_as_build:
   # libuv is missing run_exports
   libuv:
