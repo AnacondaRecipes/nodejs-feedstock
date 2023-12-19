@@ -1,4 +1,4 @@
-{% set version = "18.16.0" %}
+{% set version = "18.18.2" %}
 
 # NODE_MODULE_VERSION set in src/node_version.h
 {% set NODE_MODULE_VERSION = 108 %}
@@ -10,18 +10,17 @@ package:
 source:
   # checksums from https://nodejs.org/dist/vX.Y.Z/SHASUMS256.txt.asc
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: 6a4f5c5d76e5c50cef673099e56f19bc3266ae363f56ca0ab77dd2f3c5088c6d  # [unix]
+  sha256: 509cd2cfc3a515bf2257ed3886b9fac64aeaac2a70ea59c0a6e02e2dbb722132  # [unix]
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: 4b3bd4cb5570cc217490639e93a7e1b7a7a341981366661e514ce61941824a85  # [win]
+  sha256: 3bb0e51e579a41a22b3bf6cb2f3e79c03801aa17acbe0ca00fc555d1282e7acd  # [win]
   patches:  # [not win]
     - linux-librt.patch  # [not win]
     - cinttypes.patch  # [linux]
     - less-shared-intermediate.patch  # [not win]
     - 0001-Forward-ceilf-floorf.patch  # [not win]
-    - 0002-ppc64le-remove-const.patch  # [ppc64le]
 
 build:
-  number: 1
+  number: 0
   # Anaconda doesn't provide nodejs on s390x because it's not included in SOW packages
   skip: True  # [s390x]
   # Prefix replacement breaks in the binary embedded configurations.
@@ -32,7 +31,7 @@ requirements:
     - {{ compiler('c') }}  # [not win]
     - {{ compiler('cxx') }}  # [not win]
     - python 3.8  # [not win]
-    - ninja  # [not win]
+    - ninja-base  # [not win]
     - pkg-config  # [not win]
     - patch     # [not win]
   host:
