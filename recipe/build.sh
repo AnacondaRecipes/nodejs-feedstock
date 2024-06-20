@@ -8,10 +8,18 @@ if [ "$(uname)" = "Darwin" ]; then
     export CPPFLAGS="$(echo ${CPPFLAGS:-} | sed -E 's@\-mmacosx\-version\-min=[^ ]*@@g')"
     export CPPFLAGS="${CPPFLAGS} -D_DARWIN_C_SOURCE"
     echo "CPPFLAGS=$CPPFLAGS"
+    ln -s $BUILD_PREFIX/bin/llvm-libtool-darwin ./libtool
+    export PATH=${PWD}:${PATH}
 else
     # need librt for clock_gettime with nodejs >= 12.12
     export LDFLAGS="$LDFLAGS -lrt"
     echo "LDFLAGS=$LDFLAGS"
+fi
+
+# disable crypto builtin-instructions
+if [[ ${target_platform} == linux-ppc64le ]]; then
+  export CFLAGS="${CFLAGS} -mno-crypto"
+  export CXXFLAGS="${CXXFLAGS} -mno-crypto"
 fi
 
 EXTRA_ARGS=
