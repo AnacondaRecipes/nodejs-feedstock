@@ -48,7 +48,7 @@ if [ "$(uname -m)" = "ppc64le" ]; then
     CPU_COUNT=$((CPU_COUNT / 4))
     ninja -C out/Release -j${CPU_COUNT}
 else
-    ninja -C out/Release
+    ninja -C out/Release -j${CPU_COUNT}
 fi
 
 if [[ "${target_platform}" != osx-* ]]; then

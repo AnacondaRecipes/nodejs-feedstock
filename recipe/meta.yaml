@@ -34,6 +34,9 @@ requirements:
     - ninja-base             # [not win]
     - pkg-config             # [not win]
     - patch                  # [not win]
+    # libuv is a bootstrap dependency in js2c
+    # starting with 20.3 (https://github.com/nodejs/node/pull/46997)
+    - libuv
   host:
     - icu {{ icu }}
     - libuv 1.44             # [not win]
