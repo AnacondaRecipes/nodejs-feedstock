@@ -39,7 +39,12 @@ requirements:
     - libuv
   host:
     - icu {{ icu }}
-    - libuv 1.44             # [not win]
+    # The introduction of the uv_pipe_bind2 and uv_pipe_connect2 methods in
+    # libuv v1.46.0 changed the behaviour of uv_pipe_bind and uv_pipe_connect.
+    # see https://github.com/nodejs/node/pull/49667 and https://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_bind2
+    # uv_pipe_bind2 added in v20.8.0 of the 20.x branch
+    # https://github.com/nodejs/node/blob/v20.8.0/src/pipe_wrap.cc
+    - libuv 1.48             # [not win]
     - openssl {{ openssl }}  # [not win]
     - zlib {{ zlib }}        # [not win]
   run:
