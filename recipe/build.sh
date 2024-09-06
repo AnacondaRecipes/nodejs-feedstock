@@ -58,7 +58,7 @@ fi
 if [[ "${target_platform}" != osx-* ]]; then
   cp out/Release/lib/libnode.* out/Release/
 fi
-$PYTHON tools/install.py install --dest-dir ${PREFIX} --prefix
+$PYTHON tools/install.py install --dest-dir ${PREFIX} --prefix ''
 cp out/Release/node $PREFIX/bin
 
 node -v
