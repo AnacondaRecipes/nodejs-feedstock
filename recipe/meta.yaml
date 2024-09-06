@@ -1,4 +1,4 @@
-{% set version = "20.9.0" %}
+{% set version = "20.17.0" %}
 
 # NODE_MODULE_VERSION set in src/node_version.h
 {% set NODE_MODULE_VERSION = 115 %}
@@ -10,9 +10,9 @@ package:
 source:
   # checksums from https://nodejs.org/dist/vX.Y.Z/SHASUMS256.txt.asc
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: a7e6547a951406e4e546a74160ed27b26f9abd4baf7c44dd5a0fa992852d0cfa  # [unix]
+  sha256: 409bda5f1896c7c20866610d778d1760991884ad2e7940837cd3f2854cf73747  # [unix]
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: 70d87dad2378c63216ff83d5a754c61d2886fc39d32ce0d2ea6de763a22d3780  # [win]
+  sha256: e323fff0aba197090faabd29c4c23f334557ff24454324f0c83faa7e399dbb74  # [win]
   patches:  # [not win]
     - linux-librt.patch  # [not win]
     - cinttypes.patch  # [linux]
@@ -36,7 +36,7 @@ requirements:
     - patch                  # [not win]
     # libuv is a bootstrap dependency in js2c
     # starting with 20.3 (https://github.com/nodejs/node/pull/46997)
-    - libuv
+    - libuv 1.48
   host:
     - icu {{ icu }}
     # The introduction of the uv_pipe_bind2 and uv_pipe_connect2 methods in
@@ -53,8 +53,8 @@ requirements:
     - openssl                # [not win]
     - zlib                   # [not win]
   run_constrained:   # [osx]
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}   # [osx and x86_64]
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.15") }}  # [osx and arm64]
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.15") }}   # [osx and x86_64]
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("11.1") }}  # [osx and arm64]
 
 test:
   commands:
