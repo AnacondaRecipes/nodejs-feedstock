@@ -1,7 +1,7 @@
-{% set version = "18.18.2" %}
+{% set version = "20.17.0" %}
 
 # NODE_MODULE_VERSION set in src/node_version.h
-{% set NODE_MODULE_VERSION = 108 %}
+{% set NODE_MODULE_VERSION = 115 %}
 
 package:
   name: nodejs
@@ -10,9 +10,9 @@ package:
 source:
   # checksums from https://nodejs.org/dist/vX.Y.Z/SHASUMS256.txt.asc
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: 509cd2cfc3a515bf2257ed3886b9fac64aeaac2a70ea59c0a6e02e2dbb722132  # [unix]
+  sha256: 409bda5f1896c7c20866610d778d1760991884ad2e7940837cd3f2854cf73747  # [unix]
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: 3bb0e51e579a41a22b3bf6cb2f3e79c03801aa17acbe0ca00fc555d1282e7acd  # [win]
+  sha256: e323fff0aba197090faabd29c4c23f334557ff24454324f0c83faa7e399dbb74  # [win]
   patches:  # [not win]
     - linux-librt.patch  # [not win]
     - cinttypes.patch  # [linux]
@@ -28,25 +28,33 @@ build:
 
 requirements:
   build:
-    - {{ compiler('c') }}  # [not win]
+    - {{ compiler('c') }}    # [not win]
     - {{ compiler('cxx') }}  # [not win]
-    - python 3.8  # [not win]
-    - ninja-base  # [not win]
-    - pkg-config  # [not win]
-    - patch     # [not win]
+    - python 3.8             # [not win]
+    - ninja-base             # [not win]
+    - pkg-config             # [not win]
+    - patch                  # [not win]
+    # libuv is a bootstrap dependency in js2c
+    # starting with 20.3 (https://github.com/nodejs/node/pull/46997)
+    - libuv 1.48
   host:
-    - libuv 1.44    # [not win]
-    - openssl {{ openssl }} # [not win]
-    - zlib 1.2      # [not win]
-    - icu 73
+    - icu {{ icu }}
+    # The introduction of the uv_pipe_bind2 and uv_pipe_connect2 methods in
+    # libuv v1.46.0 changed the behaviour of uv_pipe_bind and uv_pipe_connect.
+    # see https://github.com/nodejs/node/pull/49667 and https://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_bind2
+    # uv_pipe_bind2 added in v20.8.0 of the 20.x branch
+    # https://github.com/nodejs/node/blob/v20.8.0/src/pipe_wrap.cc
+    - libuv 1.48             # [not win]
+    - openssl {{ openssl }}  # [not win]
+    - zlib {{ zlib }}        # [not win]
   run:
     - {{ pin_compatible('icu') }}
-    - libuv  # [not win]
-    - openssl # [not win]
-    - zlib  # [not win]
+    - libuv                  # [not win]
+    - openssl                # [not win]
+    - zlib                   # [not win]
   run_constrained:   # [osx]
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}   # [osx and x86_64]
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.15") }}  # [osx and arm64]
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.15") }}   # [osx and x86_64]
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("11.1") }}  # [osx and arm64]
 
 test:
   commands:

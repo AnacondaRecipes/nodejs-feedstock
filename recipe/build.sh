@@ -12,6 +12,10 @@ else
     # need librt for clock_gettime with nodejs >= 12.12
     export LDFLAGS="$LDFLAGS -lrt"
     echo "LDFLAGS=$LDFLAGS"
+
+    # https://github.com/nodejs/node/issues/52223
+    sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
+    sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
 fi
 
 EXTRA_ARGS=
@@ -48,13 +52,13 @@ if [ "$(uname -m)" = "ppc64le" ]; then
     CPU_COUNT=$((CPU_COUNT / 4))
     ninja -C out/Release -j${CPU_COUNT}
 else
-    ninja -C out/Release
+    ninja -C out/Release -j${CPU_COUNT}
 fi
 
 if [[ "${target_platform}" != osx-* ]]; then
   cp out/Release/lib/libnode.* out/Release/
 fi
-$PYTHON tools/install.py install ${PREFIX} ''
+$PYTHON tools/install.py install --dest-dir ${PREFIX} --prefix ''
 cp out/Release/node $PREFIX/bin
 
 node -v
