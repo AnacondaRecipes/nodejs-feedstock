@@ -23,6 +23,7 @@ source:
     - patches/0002-include-obj-name-in-shared-intermediate.patch    # [not win]
     - patches/0003-Forward-ceilf-floorf.patch                       # [not win]
     - patches/0005-fix-ada-constexpr.patch                          # [linux]
+    - patches/0006-fix-range-c++20.patch                            # [linux]
 
 build:
   number: 0

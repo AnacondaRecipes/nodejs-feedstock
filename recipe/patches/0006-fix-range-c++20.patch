@@ -1,0 +1,13 @@
+diff --git a/src/node_v8_platform-inl.h b/src/node_v8_platform-inl.h
+index fc092203..20a7ecf5 100644
+--- a/src/node_v8_platform-inl.h
++++ b/src/node_v8_platform-inl.h
+@@ -131,7 +131,7 @@ struct V8Platform {
+         [](auto& categories) -> std::set<std::string> {
+       std::set<std::string> out;
+       for (const auto& s : categories) {
+-        out.emplace(std::string(s.data(), s.size()));
++        out.emplace(std::string(std::ranges::begin(s), std::ranges::end(s)));
+       }
+       return out;
+     };
