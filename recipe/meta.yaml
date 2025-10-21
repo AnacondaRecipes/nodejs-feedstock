@@ -1,4 +1,5 @@
-{% set version = "24.10.0" %}
+# {% set version = "24.10.0" %}
+{% set version = "22.21.0" %}
 
 package:
   name: nodejs
@@ -7,9 +8,11 @@ package:
 source:
   # checksums from https://nodejs.org/dist/vX.Y.Z/SHASUMS256.txt.asc
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: fb9aa1938aa8d7b53e437184e4c5b26823db0afb5ac1cbfe6559176531e900e6  # [unix]
+  # sha256: fb9aa1938aa8d7b53e437184e4c5b26823db0afb5ac1cbfe6559176531e900e6  # [unix]
+  # sha256: 3ada9d465cd6557b7b0ccea5f785278931a2a319bc941f68b2e742c6883f18ad  # [unix]
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: adc1a2d5ca79c92e94f3a58c3ec0efa76bdb488769ba4d4b50990e4c84896060  # [win]
+  # sha256: adc1a2d5ca79c92e94f3a58c3ec0efa76bdb488769ba4d4b50990e4c84896060  # [win]
+  sha256: 84d31df6571c3c7156707265bf51e2a021656fa1584bf6f4486b792dcde54d7d  # [win]
   patches:   # [not win]
     - patches/0001-stop-removing-librt.patch                      # [not win]
     - patches/0002-include-obj-name-in-shared-intermediate.patch  # [not win]

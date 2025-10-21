@@ -69,78 +69,50 @@ export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
 # This keeps compatibility with the defaults toolchain while allowing
 # Node.js to build successfully with modern libc++ headers.
 
-# if [[ $target_platform == osx-* ]]; then
-#   EXTRA_ARGS="--dest-os=mac --dest-cpu=arm64"
-
-#   SDK_NEW="$(xcrun --sdk macosx --show-sdk-path || true)"
-#   if [ -d "$SDK_NEW/usr/include/c++/v1" ]; then
-#     echo "Using SDKROOT=$SDK_NEW"
-#     export CONDA_BUILD_SYSROOT="$SDK_NEW"
-#     export SDKROOT="$SDK_NEW"
-#   else
-#     echo "WARNING: only old SDK 12.1 available — modern C++20 headers missing"
-#   fi
-
-#   export MACOSX_DEPLOYMENT_TARGET=12.1
-#   export CXXFLAGS="$(echo ${CXXFLAGS:-} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET -std=gnu++20 -stdlib=libc++ -D_LIBCPP_DISABLE_AVAILABILITY"
-#   export CPPFLAGS="$(echo ${CPPFLAGS:-} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -D_DARWIN_C_SOURCE -isysroot $SDK_NEW"
-#   export LDFLAGS="$LDFLAGS -isysroot $SDK_NEW"
-# fi
-
 if [[ $target_platform == osx-* ]]; then
   EXTRA_ARGS="--dest-os=mac --dest-cpu=arm64"
 
+  SDK_NEW="$(xcrun --sdk macosx --show-sdk-path || true)"
+  if [ -d "$SDK_NEW/usr/include/c++/v1" ]; then
+    echo "Using SDKROOT=$SDK_NEW"
+    export CONDA_BUILD_SYSROOT="$SDK_NEW"
+    export SDKROOT="$SDK_NEW"
+  else
+    echo "WARNING: only old SDK 12.1 available — modern C++20 headers missing"
+  fi
+
   export MACOSX_DEPLOYMENT_TARGET=12.1
-  export GYP_DEFINES="mac_deployment_target=${MACOSX_DEPLOYMENT_TARGET}"
-  export GN_ARGS="mac_deployment_target=\"${MACOSX_DEPLOYMENT_TARGET}\" use_custom_libcxx=false is_component_build=false"
-
-  export CXXFLAGS="$(
-    echo ${CXXFLAGS:-} \
-      | sed -E 's@-mmacosx-version-min=[^ ]*@@g' \
-      | sed -E 's@-std=[^ ]*@@g'
-  ) -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET} -std=gnu++20 -stdlib=libc++ -D_LIBCPP_DISABLE_AVAILABILITY"
-
-  export CPPFLAGS="$(
-    echo ${CPPFLAGS:-} \
-      | sed -E 's@-mmacosx-version-min=[^ ]*@@g'
-  ) -D_DARWIN_C_SOURCE"
-
-  export LDFLAGS="$(
-    echo ${LDFLAGS:-} \
-      | sed -E 's@-mmacosx-version-min=[^ ]*@@g'
-  ) -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET} -Wl,-headerpad_max_install_names -Wl,-dead_strip_dylibs -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
-
-  export LIBS="${LIBS:-} -lc++ -lc++abi"
-  export LIBRARY_PATH="${PREFIX}/lib:${LIBRARY_PATH:-}"
+  export CXXFLAGS="$(echo ${CXXFLAGS:-} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET -std=gnu++20 -stdlib=libc++ -D_LIBCPP_DISABLE_AVAILABILITY"
+  export CPPFLAGS="$(echo ${CPPFLAGS:-} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -D_DARWIN_C_SOURCE -isysroot $SDK_NEW"
+  export LDFLAGS="$LDFLAGS -isysroot $SDK_NEW"
 fi
-
-
-
 
 # if [[ $target_platform == osx-* ]]; then
 #   EXTRA_ARGS="--dest-os=mac --dest-cpu=arm64"
-  
-#   SDK_NEW="$(xcrun --sdk macosx --show-sdk-path || true)"
-#   SDK_VER="$(xcrun --sdk macosx --show-sdk-version || echo 0)"
 
-#   if [[ "$SDK_VER" =~ ^([0-9]+) ]] && (( ${BASH_REMATCH[1]} >= 13 )) && [[ -d "$SDK_NEW/usr/include/c++/v1" ]]; then
-#     echo "Using SDKROOT=$SDK_NEW (macOS $SDK_VER)"
-#     export CONDA_BUILD_SYSROOT="$SDK_NEW"
-#     export SDKROOT="$SDK_NEW"
-#     export CPPFLAGS="$(echo ${CPPFLAGS:-} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -D_DARWIN_C_SOURCE -isysroot $SDK_NEW"
-#     export LDFLAGS="$LDFLAGS -isysroot $SDK_NEW"
-#   else
-#     echo "SDK too old ($SDK_VER), NOT setting -isysroot (will use headers/libs from \$PREFIX)"
+#   export MACOSX_DEPLOYMENT_TARGET=12.1
+#   export GYP_DEFINES="mac_deployment_target=${MACOSX_DEPLOYMENT_TARGET}"
+#   export GN_ARGS="mac_deployment_target=\"${MACOSX_DEPLOYMENT_TARGET}\" use_custom_libcxx=false is_component_build=false"
 
-#     export CPATH="$PREFIX/include:$PREFIX/include/c++/v1:${CPATH:-}"
-#     export LIBRARY_PATH="$PREFIX/lib:${LIBRARY_PATH:-}"
-#   fi
+#   export CXXFLAGS="$(
+#     echo ${CXXFLAGS:-} \
+#       | sed -E 's@-mmacosx-version-min=[^ ]*@@g' \
+#       | sed -E 's@-std=[^ ]*@@g'
+#   ) -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET} -std=gnu++20 -stdlib=libc++ -D_LIBCPP_DISABLE_AVAILABILITY"
 
-#   export MACOSX_DEPLOYMENT_TARGET=13.5
-#   export CXXFLAGS="$(echo ${CXXFLAGS} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET -std=gnu++20 -stdlib=libc++ -D_LIBCPP_DISABLE_AVAILABILITY"
-#   export LDFLAGS="${LDFLAGS} -lc++ -lc++abi -L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib"
+#   export CPPFLAGS="$(
+#     echo ${CPPFLAGS:-} \
+#       | sed -E 's@-mmacosx-version-min=[^ ]*@@g'
+#   ) -D_DARWIN_C_SOURCE"
+
+#   export LDFLAGS="$(
+#     echo ${LDFLAGS:-} \
+#       | sed -E 's@-mmacosx-version-min=[^ ]*@@g'
+#   ) -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET} -Wl,-headerpad_max_install_names -Wl,-dead_strip_dylibs -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
+
+#   export LIBS="${LIBS:-} -lc++ -lc++abi"
+#   export LIBRARY_PATH="${PREFIX}/lib:${LIBRARY_PATH:-}"
 # fi
-
 
 
 ./configure \
