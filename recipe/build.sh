@@ -81,7 +81,7 @@ if [[ $target_platform == osx-* ]]; then
     echo "WARNING: only old SDK 12.1 available — modern C++20 headers missing"
   fi
 
-  export MACOSX_DEPLOYMENT_TARGET=13.5
+  export MACOSX_DEPLOYMENT_TARGET=12.1
   export CXXFLAGS="$(echo ${CXXFLAGS:-} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET -std=gnu++20 -stdlib=libc++ -D_LIBCPP_DISABLE_AVAILABILITY"
   export CPPFLAGS="$(echo ${CPPFLAGS:-} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -D_DARWIN_C_SOURCE -isysroot $SDK_NEW"
   export LDFLAGS="$LDFLAGS -isysroot $SDK_NEW"
