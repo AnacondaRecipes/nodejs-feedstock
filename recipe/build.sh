@@ -7,12 +7,17 @@ export LINK="${CXX}"
 export PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig:${PKG_CONFIG_PATH:-}"
 export PKG_CONFIG="${PKG_CONFIG:-pkg-config}"
 
-export CXXFLAGS="${CXXFLAGS:-} -stdlib=libc++"
-# export LDFLAGS="${LDFLAGS:-} -stdlib=libc++ -L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib -lc++"
-export LDFLAGS="${LDFLAGS} -lc++ -lc++abi -L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib"
-
 # scrub -std=... flag which conflicts with builds
 export CXXFLAGS=$(echo ${CXXFLAGS:-} | sed -E 's@\-std=[^ ]*@@g')
+
+if [[ "$target_platform" == linux-* ]]; then
+  # подчистить любые следы macOS-специфичных флагов, вдруг пришли из внешней среды
+  export CXXFLAGS="$(echo "${CXXFLAGS:-}" | sed -E 's@-stdlib=libc\+\+@@g')"
+  export LDFLAGS="$(echo "${LDFLAGS:-}" | sed -E 's@-stdlib=libc\+\+@@g' \
+                                       | sed -E 's@-lc\+\+abi@@g' \
+                                       | sed -E 's@-lc\+\+@@g')"
+  export LDFLAGS="${LDFLAGS} -L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib -lrt"
+fi
 
 EXTRA_ARGS=
 
@@ -27,7 +32,7 @@ fi
 
 if [[ "$target_platform" == linux-* ]]; then
    # need librt for clock_gettime with nodejs >= 12.12
-  export LDFLAGS="$LDFLAGS -lrt"
+  # export LDFLAGS="$LDFLAGS -lrt"
   # fixes for cares on some Linux
   # https://github.com/nodejs/node/issues/52223
   sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
