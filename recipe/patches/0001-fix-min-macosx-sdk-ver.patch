@@ -1,0 +1,13 @@
+diff --git a/common.gypi b/common.gypi
+index 97ce0a3..469f407 100644
+--- a/common.gypi
++++ b/common.gypi
+@@ -639,7 +639,7 @@
+           'GCC_ENABLE_PASCAL_STRINGS': 'NO',        # No -mpascal-strings
+           'GCC_STRICT_ALIASING': 'NO',              # -fno-strict-aliasing
+           'PREBINDING': 'NO',                       # No -Wl,-prebind
+-          'MACOSX_DEPLOYMENT_TARGET': '11.0',       # -mmacosx-version-min=11.0
++          'MACOSX_DEPLOYMENT_TARGET': '12.1',       # -mmacosx-version-min=12.1
+           'USE_HEADERMAP': 'NO',
+           'WARNING_CFLAGS': [
+             '-Wall',
