@@ -32,12 +32,10 @@ requirements:
   host:
     - icu {{ icu }}
     - openssl {{ openssl }}  # [not win]
-    - sqlite {{ sqlite }}    # [not win]
     - zlib {{ zlib }}        # [not win]
   run:
     - {{ pin_compatible('icu') }}
     - openssl                # [not win]
-    - sqlite                 # [not win]
     - zlib                   # [not win]
   run_constrained:   # [osx]
     - __osx >=12.1  # [osx and arm64]
