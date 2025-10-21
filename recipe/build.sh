@@ -39,14 +39,14 @@ if [[ "$target_platform" == linux-* ]]; then
   sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
 fi
 
-if [[ "$target_platform" == linux-aarch64 ]]; then
-  export CC=clang
-  export CXX=clang++
+if [[ "$target_platform" == linux-* ]]; then
+  # export CC=clang
+  # export CXX=clang++
   export CFLAGS="${CFLAGS} -std=gnu17"
   export CXXFLAGS="$(echo "${CXXFLAGS}" | sed -E 's@\-stdlib=libc\+\+@@g') -std=gnu++20"
   export LDFLAGS="$(echo "${LDFLAGS}" | sed -E 's@\-stdlib=libc\+\+@@g')"
 
-  EXTRA_ARGS+=" --cross-compiling --dest-os=linux --dest-cpu=arm64"
+  # EXTRA_ARGS+="--dest-os=linux --dest-cpu=arm64"
 fi
 
 export CC_host=$CC_FOR_BUILD
