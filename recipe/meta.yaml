@@ -1,5 +1,5 @@
-# {% set version = "23.11.1" %}
-{% set version = "24.10.0" %}
+{% set version = "23.11.1" %}
+# {% set version = "24.10.0" %}
 
 package:
   name: nodejs
@@ -7,19 +7,19 @@ package:
 
 source:
   # checksums from https://nodejs.org/dist/vX.Y.Z/SHASUMS256.txt.asc
-  # url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  # sha256: 75509306732090bfa99b004d097909315f7789badb4a495e82b5f17b6329247a  # [unix]
-  # url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  # sha256: d22640060e1911efaede4ecc5820f94b613bc196868289cd34f56d46e4709b71  # [win]
-
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: fb9aa1938aa8d7b53e437184e4c5b26823db0afb5ac1cbfe6559176531e900e6  # [unix]
+  sha256: 75509306732090bfa99b004d097909315f7789badb4a495e82b5f17b6329247a  # [unix]
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: adc1a2d5ca79c92e94f3a58c3ec0efa76bdb488769ba4d4b50990e4c84896060  # [win]
+  sha256: d22640060e1911efaede4ecc5820f94b613bc196868289cd34f56d46e4709b71  # [win]
+
+  # url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
+  # sha256: fb9aa1938aa8d7b53e437184e4c5b26823db0afb5ac1cbfe6559176531e900e6  # [unix]
+  # url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
+  # sha256: adc1a2d5ca79c92e94f3a58c3ec0efa76bdb488769ba4d4b50990e4c84896060  # [win]
 
   patches:   # [not win]
-    # - patches/0001-fix-min-macosx-sdk-ver.patch                   # [not win]
-    - patches/0001-fix-min-macosx-sdk-ver-for-nodejs-24.10.0.patch  # [not win]
+    - patches/0001-fix-min-macosx-sdk-ver.patch                   # [not win]
+    # - patches/0001-fix-min-macosx-sdk-ver-for-nodejs-24.10.0.patch  # [not win]
     - patches/0002-include-obj-name-in-shared-intermediate.patch    # [not win]
     - patches/0003-Forward-ceilf-floorf.patch                       # [not win]
 
@@ -33,6 +33,8 @@ requirements:
     - {{ stdlib('c') }}      # [not win]
     - {{ compiler('c') }}    # [not win]
     - {{ compiler('cxx') }}  # [not win]
+    - sysroot_linux-64 {{ sysroot_linux_64 }}            # [linux64]
+    - sysroot_linux-aarch64 {{ sysroot_linux_aarch64 }}  # [aarch64]
     - python                 # [not win]
     - ninja                  # [not win]
     - pkg-config             # [not win]
@@ -41,15 +43,11 @@ requirements:
     # ---- toolchain для Linux (clang + libc++) ----
     - clang 20.1.8            # [linux]
     - clangxx 20.1.8          # [linux]
-    - compiler-rt 20.1.8      # [linux]
     - lld 20.1.8              # [linux]
     - libllvm20 20.1.8        # [linux]
     - llvm-tools 20.1.8       # [linux]
     - libcxx 20.1.8           # [linux]
     - libcxx-devel 20.1.8     # [linux]
-    - sysroot_linux-64 2.17   # [linux]
-    - sysroot_linux-aarch64 2.17  # [aarch64 and linux]
-    - patchelf >=0.17          # [linux]
 
 
   host:
@@ -60,8 +58,6 @@ requirements:
     - {{ pin_compatible('icu') }}
     - openssl                # [not win]
     - zlib                   # [not win]
-  # run_constrained:   # [osx]
-  #   - __osx >=11.0  # [osx and arm64]
 
 test:
   requires:
