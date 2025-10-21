@@ -49,14 +49,14 @@ fi
 #   # EXTRA_ARGS+="--dest-os=linux --dest-cpu=arm64"
 # fi
 
-if [[ $target_platform == linux-* ]]; then
-  export CC=clang
-  export CXX=clang++
-  export LD=ld.lld
-  export AR=llvm-ar
-  export RANLIB=llvm-ranlib
-  export NM=llvm-nm
-  export STRIP=llvm-strip
+if [[ "$target_platform" == linux-* ]]; then
+  export CC=${CC:-clang}
+  export CXX=${CXX:-clang++}
+  export AR=${AR:-llvm-ar}
+  export NM=${NM:-llvm-nm}
+  export RANLIB=${RANLIB:-llvm-ranlib}
+  export STRIP=${STRIP:-llvm-strip}
+  export LD=${LD:-ld.lld}
 
   if [[ -n "${CONDA_BUILD_SYSROOT:-}" ]]; then
     export CFLAGS="${CFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
@@ -64,12 +64,14 @@ if [[ $target_platform == linux-* ]]; then
     export LDFLAGS="${LDFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
   fi
 
-  export CXXFLAGS="$(echo ${CXXFLAGS:-} | sed -E 's@-std=[^ ]*@@g;s@-stdlib=[^ ]*@@g') -std=gnu++20 -stdlib=libc++ -fPIC"
+  CXXFLAGS="$(echo ${CXXFLAGS:-} | sed -E 's@-std=[^ ]*@@g; s@-stdlib=[^ ]*@@g')"
+  export CXXFLAGS="${CXXFLAGS} -std=gnu++20 -stdlib=libc++ -fPIC"
   export CFLAGS="${CFLAGS} -fPIC"
-  export LDFLAGS="$(echo ${LDFLAGS:-} | sed -E 's@-stdlib=[^ ]*@@g') -stdlib=libc++ -fuse-ld=lld -Wl,-rpath,${PREFIX}/lib"
 
-  export CXXFLAGS="$(echo ${CXXFLAGS} | sed -E 's@-D_GLIBCXX_USE_CXX11_ABI=[01]@@g')"
-  export CFLAGS="$(echo ${CFLAGS} | sed -E 's@-D_GLIBCXX_USE_CXX11_ABI=[01]@@g')"
+  LDFLAGS="$(echo ${LDFLAGS:-} | sed -E 's@-stdlib=[^ ]*@@g')"
+  export LDFLAGS="${LDFLAGS} -stdlib=libc++ -fuse-ld=lld -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
+
+  export LIBS="${LIBS} -lc++ -lc++abi"
 fi
 
 

@@ -52,10 +52,12 @@ requirements:
     - icu {{ icu }}
     - openssl {{ openssl }}  # [not win]
     - zlib {{ zlib }}        # [not win]
+    - libcxx                       # [linux]
   run:
     - {{ pin_compatible('icu') }}
     - openssl                # [not win]
     - zlib                   # [not win]
+    - libcxx                       # [linux]
 
 test:
   requires:
