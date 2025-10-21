@@ -91,20 +91,27 @@ if [[ $target_platform == osx-* ]]; then
   EXTRA_ARGS="--dest-os=mac --dest-cpu=arm64"
 
   export MACOSX_DEPLOYMENT_TARGET=12.1
+  export GYP_DEFINES="mac_deployment_target=${MACOSX_DEPLOYMENT_TARGET}"
+  export GN_ARGS="mac_deployment_target=\"${MACOSX_DEPLOYMENT_TARGET}\" use_custom_libcxx=false is_component_build=false"
 
   export CXXFLAGS="$(
     echo ${CXXFLAGS:-} \
       | sed -E 's@-mmacosx-version-min=[^ ]*@@g' \
       | sed -E 's@-std=[^ ]*@@g'
-  ) -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET -std=gnu++20 -stdlib=libc++ -D_LIBCPP_DISABLE_AVAILABILITY"
+  ) -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET} -std=gnu++20 -stdlib=libc++ -D_LIBCPP_DISABLE_AVAILABILITY"
 
   export CPPFLAGS="$(
     echo ${CPPFLAGS:-} \
       | sed -E 's@-mmacosx-version-min=[^ ]*@@g'
   ) -D_DARWIN_C_SOURCE"
 
-  export LDFLAGS="-Wl,-headerpad_max_install_names -Wl,-dead_strip_dylibs -Wl,-rpath,$PREFIX/lib -L$PREFIX/lib"
-  export LIBRARY_PATH="$PREFIX/lib:${LIBRARY_PATH:-}"
+  export LDFLAGS="$(
+    echo ${LDFLAGS:-} \
+      | sed -E 's@-mmacosx-version-min=[^ ]*@@g'
+  ) -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET} -Wl,-headerpad_max_install_names -Wl,-dead_strip_dylibs -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
+
+  export LIBS="${LIBS:-} -lc++ -lc++abi"
+  export LIBRARY_PATH="${PREFIX}/lib:${LIBRARY_PATH:-}"
 fi
 
 
