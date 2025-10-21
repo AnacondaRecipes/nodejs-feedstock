@@ -110,6 +110,7 @@ fi
     --shared-openssl \
     --shared-zlib \
     --with-intl=system-icu \
+    --shared-sqlite \
     ${EXTRA_ARGS}
 
 ninja -C out/Release -j"${CPU_COUNT:-2}" -v
