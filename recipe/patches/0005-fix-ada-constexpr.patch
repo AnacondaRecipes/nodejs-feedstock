@@ -1,5 +1,5 @@
 diff --git a/deps/ada/ada.h b/deps/ada/ada.h
-index da4c919..21d2ad4 100644
+index da4c919..070dc99 100644
 --- a/deps/ada/ada.h
 +++ b/deps/ada/ada.h
 @@ -17,6 +17,20 @@
@@ -61,7 +61,7 @@ index da4c919..21d2ad4 100644
  
  };  // struct url
  
-@@ -5534,7 +5548,7 @@ class Tokenizer {
+@@ -5534,10 +5548,10 @@ class Tokenizer {
        : input(new_input), policy(new_policy) {}
  
    // @see https://urlpattern.spec.whatwg.org/#get-the-next-code-point
@@ -69,7 +69,11 @@ index da4c919..21d2ad4 100644
 +  ADA_RELAXED_CONSTEXPR void get_next_code_point();
  
    // @see https://urlpattern.spec.whatwg.org/#seek-and-get-the-next-code-point
-   constexpr void seek_and_get_next_code_point(size_t index);
+-  constexpr void seek_and_get_next_code_point(size_t index);
++  ADA_RELAXED_CONSTEXPR void seek_and_get_next_code_point(size_t index);
+ 
+   // @see https://urlpattern.spec.whatwg.org/#add-a-token
+ 
 @@ -6618,7 +6632,7 @@ inline std::ostream &operator<<(std::ostream &out, const ada::url &u) {
    return path.size();
  }
@@ -91,6 +95,15 @@ index da4c919..21d2ad4 100644
  
  [[nodiscard]] constexpr bool url::has_hash() const noexcept {
    return hash.has_value();
+@@ -6739,7 +6753,7 @@ constexpr void url::clear_search() { query = std::nullopt; }
+   return query.has_value();
+ }
+ 
+-constexpr void url::set_protocol_as_file() { type = ada::scheme::type::FILE; }
++ADA_RELAXED_CONSTEXPR void url::set_protocol_as_file() { type = ada::scheme::type::FILE; }
+ 
+ inline void url::set_scheme(std::string &&new_scheme) noexcept {
+   type = ada::scheme::get_scheme_type(new_scheme);
 @@ -6749,12 +6763,12 @@ inline void url::set_scheme(std::string &&new_scheme) noexcept {
    }
  }
@@ -205,3 +218,12 @@ index da4c919..21d2ad4 100644
    ada_log("Tokenizer::get_next_code_point called with index=", next_index);
    ADA_ASSERT_TRUE(next_index < input.size());
    // this assumes that we have a valid, non-truncated UTF-8 stream.
+@@ -9792,7 +9806,7 @@ constexpr void Tokenizer::get_next_code_point() {
+   next_index += number_bytes;
+ }
+ 
+-constexpr void Tokenizer::seek_and_get_next_code_point(size_t new_index) {
++ADA_RELAXED_CONSTEXPR void Tokenizer::seek_and_get_next_code_point(size_t new_index) {
+   ada_log("Tokenizer::seek_and_get_next_code_point called with new_index=",
+           new_index);
+   // Set tokenizer's next index to index.
