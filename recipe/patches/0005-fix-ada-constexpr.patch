@@ -1,0 +1,160 @@
+diff --git a/deps/ada/ada.h b/deps/ada/ada.h
+index da4c919..3f5f17c 100644
+--- a/deps/ada/ada.h
++++ b/deps/ada/ada.h
+@@ -17,6 +17,20 @@
+ #ifndef ADA_IDNA_UNICODE_TRANSCODING_H
+ #define ADA_IDNA_UNICODE_TRANSCODING_H
+ 
++#if __has_include(<version>)
++  #include <version>
++#endif
++
++#ifndef ADA_RELAXED_CONSTEXPR
++  #if defined(__cpp_lib_constexpr_string) && __cpp_lib_constexpr_string >= 201907L && \
++      defined(__cpp_lib_constexpr_optional) && __cpp_lib_constexpr_optional >= 201907L
++    #define ADA_RELAXED_CONSTEXPR constexpr
++  #else
++    #define ADA_RELAXED_CONSTEXPR /* not constexpr on old libstdc++ */
++  #endif
++#endif
++
++
+ #include <string>
+ #include <string_view>
+ 
+@@ -4747,7 +4761,7 @@ struct url : url_base {
+    * @return a newly allocated string.
+    * @see https://url.spec.whatwg.org/#dom-url-pathname
+    */
+-  [[nodiscard]] constexpr std::string_view get_pathname() const noexcept;
++  [[nodiscard]] ADA_RELAXED_CONSTEXPR std::string_view get_pathname() const noexcept;
+ 
+   /**
+    * Compute the pathname length in bytes without instantiating a view or a
+@@ -4971,8 +4985,8 @@ struct url : url_base {
+   template <bool has_state_override = false>
+   [[nodiscard]] ada_really_inline bool parse_scheme(std::string_view input);
+ 
+-  constexpr void clear_pathname() override;
+-  constexpr void clear_search() override;
++  ADA_RELAXED_CONSTEXPR void clear_pathname() override;
++  ADA_RELAXED_CONSTEXPR void clear_search() override;
+   constexpr void set_protocol_as_file();
+ 
+   /**
+@@ -4998,13 +5012,13 @@ struct url : url_base {
+    * Take the scheme from another URL. The scheme string is moved from the
+    * provided url.
+    */
+-  constexpr void copy_scheme(ada::url &&u) noexcept;
++  ADA_RELAXED_CONSTEXPR void copy_scheme(ada::url &&u) noexcept;
+ 
+   /**
+    * Take the scheme from another URL. The scheme string is copied from the
+    * provided url.
+    */
+-  constexpr void copy_scheme(const ada::url &u);
++  ADA_RELAXED_CONSTEXPR void copy_scheme(const ada::url &u);
+ 
+ };  // struct url
+ 
+@@ -6727,9 +6741,9 @@ inline void url::update_base_port(std::optional<uint16_t> input) {
+   port = input;
+ }
+ 
+-constexpr void url::clear_pathname() { path.clear(); }
++ADA_RELAXED_CONSTEXPR void url::clear_pathname() { path.clear(); }
+ 
+-constexpr void url::clear_search() { query = std::nullopt; }
++ADA_RELAXED_CONSTEXPR void url::clear_search() { query = std::nullopt; }
+ 
+ [[nodiscard]] constexpr bool url::has_hash() const noexcept {
+   return hash.has_value();
+@@ -6749,12 +6763,12 @@ inline void url::set_scheme(std::string &&new_scheme) noexcept {
+   }
+ }
+ 
+-constexpr void url::copy_scheme(ada::url &&u) noexcept {
++ADA_RELAXED_CONSTEXPR void url::copy_scheme(ada::url &&u) noexcept {
+   non_special_scheme = u.non_special_scheme;
+   type = u.type;
+ }
+ 
+-constexpr void url::copy_scheme(const ada::url &u) {
++ADA_RELAXED_CONSTEXPR void url::copy_scheme(const ada::url &u) {
+   non_special_scheme = u.non_special_scheme;
+   type = u.type;
+ }
+@@ -7033,7 +7047,7 @@ struct url_aggregator : url_base {
+    * @return a lightweight std::string_view.
+    * @see https://url.spec.whatwg.org/#dom-url-pathname
+    */
+-  [[nodiscard]] constexpr std::string_view get_pathname() const noexcept
++  [[nodiscard]] ADA_RELAXED_CONSTEXPR std::string_view get_pathname() const noexcept
+       ada_lifetime_bound;
+   /**
+    * Compute the pathname length in bytes without instantiating a view or a
+@@ -7223,7 +7237,7 @@ struct url_aggregator : url_base {
+   [[nodiscard]] inline uint32_t retrieve_base_port() const;
+   constexpr void clear_hostname();
+   constexpr void clear_password();
+-  constexpr void clear_pathname() override;
++  ADA_RELAXED_CONSTEXPR void clear_pathname() override;
+   [[nodiscard]] constexpr bool has_dash_dot() const noexcept;
+   void delete_dash_dot();
+   inline void consume_prepared_path(std::string_view input);
+@@ -7927,7 +7941,7 @@ inline void url_aggregator::clear_hash() {
+   ADA_ASSERT_TRUE(validate());
+ }
+ 
+-constexpr void url_aggregator::clear_pathname() {
++ADA_RELAXED_CONSTEXPR void url_aggregator::clear_pathname() {
+   ada_log("url_aggregator::clear_pathname");
+   ADA_ASSERT_TRUE(validate());
+   uint32_t ending_index = uint32_t(buffer.size());
+@@ -8061,7 +8075,7 @@ inline void ada::url_aggregator::add_authority_slashes_if_needed() noexcept {
+   ADA_ASSERT_TRUE(validate());
+ }
+ 
+-constexpr void ada::url_aggregator::reserve(uint32_t capacity) {
++ADA_RELAXED_CONSTEXPR void ada::url_aggregator::reserve(uint32_t capacity) {
+   buffer.reserve(capacity);
+ }
+ 
+@@ -8138,7 +8152,7 @@ constexpr bool url_aggregator::has_port() const noexcept {
+          buffer[components.host_end + 1] == '.';
+ }
+ 
+-[[nodiscard]] constexpr std::string_view url_aggregator::get_href()
++[[nodiscard]] ADA_RELAXED_CONSTEXPR std::string_view url_aggregator::get_href()
+     const noexcept ada_lifetime_bound {
+   ada_log("url_aggregator::get_href");
+   return buffer;
+@@ -8183,7 +8197,7 @@ ada_really_inline size_t url_aggregator::parse_port(
+   return consumed;
+ }
+ 
+-constexpr void url_aggregator::set_protocol_as_file() {
++ADA_RELAXED_CONSTEXPR void url_aggregator::set_protocol_as_file() {
+   ada_log("url_aggregator::set_protocol_as_file ");
+   ADA_ASSERT_TRUE(validate());
+   type = ada::scheme::type::FILE;
+@@ -8383,7 +8397,7 @@ constexpr void url_aggregator::set_protocol_as_file() {
+   return true;
+ }
+ 
+-[[nodiscard]] constexpr std::string_view url_aggregator::get_pathname()
++[[nodiscard]] ADA_RELAXED_CONSTEXPR std::string_view url_aggregator::get_pathname()
+     const noexcept ada_lifetime_bound {
+   ada_log("url_aggregator::get_pathname pathname_start = ",
+           components.pathname_start, " buffer.size() = ", buffer.size(),
+@@ -9745,7 +9759,7 @@ constexpr bool constructor_string_parser<regex_provider>::is_port_prefix()
+   return is_non_special_pattern_char(token_index, ':');
+ }
+ 
+-constexpr void Tokenizer::get_next_code_point() {
++ADA_RELAXED_CONSTEXPR void Tokenizer::get_next_code_point() {
+   ada_log("Tokenizer::get_next_code_point called with index=", next_index);
+   ADA_ASSERT_TRUE(next_index < input.size());
+   // this assumes that we have a valid, non-truncated UTF-8 stream.

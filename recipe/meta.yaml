@@ -18,10 +18,11 @@ source:
   # sha256: adc1a2d5ca79c92e94f3a58c3ec0efa76bdb488769ba4d4b50990e4c84896060  # [win]
 
   patches:   # [not win]
-    - patches/0001-fix-min-macosx-sdk-ver.patch                   # [not win]
+    - patches/0001-fix-min-macosx-sdk-ver.patch                     # [not win]
     # - patches/0001-fix-min-macosx-sdk-ver-for-nodejs-24.10.0.patch  # [not win]
     - patches/0002-include-obj-name-in-shared-intermediate.patch    # [not win]
     - patches/0003-Forward-ceilf-floorf.patch                       # [not win]
+    - patches/0005-fix-ada-constexpr.patch                          # [not win]
 
 build:
   number: 0
@@ -37,27 +38,14 @@ requirements:
     - ninja                  # [not win]
     - pkg-config             # [not win]
     - patch                  # [not win]
-
-    # ---- toolchain для Linux (clang + libc++) ----
-    - clang 20.1.8            # [linux]
-    - clangxx 20.1.8          # [linux]
-    - lld 20.1.8              # [linux]
-    - libllvm20 20.1.8        # [linux]
-    - llvm-tools 20.1.8       # [linux]
-    - libcxx 20.1.8           # [linux]
-    - libcxx-devel 20.1.8     # [linux]
-
-
   host:
     - icu {{ icu }}
     - openssl {{ openssl }}  # [not win]
     - zlib {{ zlib }}        # [not win]
-    - libcxx                       # [linux]
   run:
     - {{ pin_compatible('icu') }}
     - openssl                # [not win]
     - zlib                   # [not win]
-    - libcxx                       # [linux]
 
 test:
   requires:

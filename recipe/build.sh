@@ -10,14 +10,14 @@
 # scrub -std=... flag which conflicts with builds
 export CXXFLAGS=$(echo ${CXXFLAGS:-} | sed -E 's@\-std=[^ ]*@@g')
 
-# if [[ "$target_platform" == linux-* ]]; then
-#   # подчистить любые следы macOS-специфичных флагов, вдруг пришли из внешней среды
-#   export CXXFLAGS="$(echo "${CXXFLAGS:-}" | sed -E 's@-stdlib=libc\+\+@@g')"
-#   export LDFLAGS="$(echo "${LDFLAGS:-}" | sed -E 's@-stdlib=libc\+\+@@g' \
-#                                        | sed -E 's@-lc\+\+abi@@g' \
-#                                        | sed -E 's@-lc\+\+@@g')"
-#   export LDFLAGS="${LDFLAGS} -L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib -lrt"
-# fi
+if [[ "$target_platform" == linux-* ]]; then
+  # подчистить любые следы macOS-специфичных флагов, вдруг пришли из внешней среды
+  export CXXFLAGS="$(echo "${CXXFLAGS:-}" | sed -E 's@-stdlib=libc\+\+@@g')"
+  export LDFLAGS="$(echo "${LDFLAGS:-}" | sed -E 's@-stdlib=libc\+\+@@g' \
+                                       | sed -E 's@-lc\+\+abi@@g' \
+                                       | sed -E 's@-lc\+\+@@g')"
+  export LDFLAGS="${LDFLAGS} -L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib -lrt"
+fi
 
 EXTRA_ARGS=
 
@@ -39,41 +39,13 @@ if [[ "$target_platform" == linux-* ]]; then
   sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
 fi
 
-# if [[ "$target_platform" == linux-* ]]; then
-#   # export CC=clang
-#   # export CXX=clang++
-#   export CFLAGS="${CFLAGS} -std=gnu17"
-#   export CXXFLAGS="$(echo "${CXXFLAGS}" | sed -E 's@\-stdlib=libc\+\+@@g') -std=gnu++20"
-#   export LDFLAGS="$(echo "${LDFLAGS}" | sed -E 's@\-stdlib=libc\+\+@@g')"
-
-#   # EXTRA_ARGS+="--dest-os=linux --dest-cpu=arm64"
-# fi
-
 if [[ "$target_platform" == linux-* ]]; then
-  export CC=${CC:-clang}
-  export CXX=${CXX:-clang++}
-  export AR=${AR:-llvm-ar}
-  export NM=${NM:-llvm-nm}
-  export RANLIB=${RANLIB:-llvm-ranlib}
-  export STRIP=${STRIP:-llvm-strip}
-  export LD=${LD:-ld.lld}
+  export CFLAGS="${CFLAGS} -std=gnu17"
+  export CXXFLAGS="$(echo "${CXXFLAGS}" | sed -E 's@\-stdlib=libc\+\+@@g') -std=gnu++20"
+  export LDFLAGS="$(echo "${LDFLAGS}" | sed -E 's@\-stdlib=libc\+\+@@g')"
 
-  if [[ -n "${CONDA_BUILD_SYSROOT:-}" ]]; then
-    export CFLAGS="${CFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
-    export CXXFLAGS="${CXXFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
-    export LDFLAGS="${LDFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
-  fi
-
-  CXXFLAGS="$(echo ${CXXFLAGS:-} | sed -E 's@-std=[^ ]*@@g; s@-stdlib=[^ ]*@@g')"
-  export CXXFLAGS="${CXXFLAGS} -std=gnu++20 -stdlib=libc++ -fPIC"
-  export CFLAGS="${CFLAGS} -fPIC"
-
-  LDFLAGS="$(echo ${LDFLAGS:-} | sed -E 's@-stdlib=[^ ]*@@g')"
-  export LDFLAGS="${LDFLAGS} -stdlib=libc++ -fuse-ld=lld -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
-
-  export LIBS="${LIBS} -lc++ -lc++abi"
+  # EXTRA_ARGS+="--dest-os=linux --dest-cpu=arm64"
 fi
-
 
 export CC_host=$CC_FOR_BUILD
 export CXX_host=$CXX_FOR_BUILD
