@@ -1,5 +1,5 @@
 diff --git a/deps/ada/ada.h b/deps/ada/ada.h
-index da4c919..3f5f17c 100644
+index da4c919..21d2ad4 100644
 --- a/deps/ada/ada.h
 +++ b/deps/ada/ada.h
 @@ -17,6 +17,20 @@
@@ -32,17 +32,19 @@ index da4c919..3f5f17c 100644
  
    /**
     * Compute the pathname length in bytes without instantiating a view or a
-@@ -4971,8 +4985,8 @@ struct url : url_base {
+@@ -4971,9 +4985,9 @@ struct url : url_base {
    template <bool has_state_override = false>
    [[nodiscard]] ada_really_inline bool parse_scheme(std::string_view input);
  
 -  constexpr void clear_pathname() override;
 -  constexpr void clear_search() override;
+-  constexpr void set_protocol_as_file();
 +  ADA_RELAXED_CONSTEXPR void clear_pathname() override;
 +  ADA_RELAXED_CONSTEXPR void clear_search() override;
-   constexpr void set_protocol_as_file();
++  ADA_RELAXED_CONSTEXPR void set_protocol_as_file();
  
    /**
+    * Parse the path from the provided input.
 @@ -4998,13 +5012,13 @@ struct url : url_base {
     * Take the scheme from another URL. The scheme string is moved from the
     * provided url.
@@ -58,6 +60,24 @@ index da4c919..3f5f17c 100644
 +  ADA_RELAXED_CONSTEXPR void copy_scheme(const ada::url &u);
  
  };  // struct url
+ 
+@@ -5534,7 +5548,7 @@ class Tokenizer {
+       : input(new_input), policy(new_policy) {}
+ 
+   // @see https://urlpattern.spec.whatwg.org/#get-the-next-code-point
+-  constexpr void get_next_code_point();
++  ADA_RELAXED_CONSTEXPR void get_next_code_point();
+ 
+   // @see https://urlpattern.spec.whatwg.org/#seek-and-get-the-next-code-point
+   constexpr void seek_and_get_next_code_point(size_t index);
+@@ -6618,7 +6632,7 @@ inline std::ostream &operator<<(std::ostream &out, const ada::url &u) {
+   return path.size();
+ }
+ 
+-[[nodiscard]] constexpr std::string_view url::get_pathname() const noexcept {
++[[nodiscard]] ADA_RELAXED_CONSTEXPR std::string_view url::get_pathname() const noexcept {
+   return path;
+ }
  
 @@ -6727,9 +6741,9 @@ inline void url::update_base_port(std::optional<uint16_t> input) {
    port = input;
@@ -86,6 +106,15 @@ index da4c919..3f5f17c 100644
    non_special_scheme = u.non_special_scheme;
    type = u.type;
  }
+@@ -6976,7 +6990,7 @@ struct url_aggregator : url_base {
+    * @see https://url.spec.whatwg.org/#dom-url-href
+    * @see https://url.spec.whatwg.org/#concept-url-serializer
+    */
+-  [[nodiscard]] constexpr std::string_view get_href() const noexcept
++  [[nodiscard]] ADA_RELAXED_CONSTEXPR std::string_view get_href() const noexcept
+       ada_lifetime_bound;
+   /**
+    * The username getter steps are to return this's URL's username.
 @@ -7033,7 +7047,7 @@ struct url_aggregator : url_base {
     * @return a lightweight std::string_view.
     * @see https://url.spec.whatwg.org/#dom-url-pathname
@@ -95,6 +124,15 @@ index da4c919..3f5f17c 100644
        ada_lifetime_bound;
    /**
     * Compute the pathname length in bytes without instantiating a view or a
+@@ -7164,7 +7178,7 @@ struct url_aggregator : url_base {
+    * To optimize performance, you may indicate how much memory to allocate
+    * within this instance.
+    */
+-  constexpr void reserve(uint32_t capacity);
++  ADA_RELAXED_CONSTEXPR void reserve(uint32_t capacity);
+ 
+   ada_really_inline size_t parse_port(
+       std::string_view view, bool check_trailing_content) noexcept override;
 @@ -7223,7 +7237,7 @@ struct url_aggregator : url_base {
    [[nodiscard]] inline uint32_t retrieve_base_port() const;
    constexpr void clear_hostname();
@@ -104,6 +142,15 @@ index da4c919..3f5f17c 100644
    [[nodiscard]] constexpr bool has_dash_dot() const noexcept;
    void delete_dash_dot();
    inline void consume_prepared_path(std::string_view input);
+@@ -7233,7 +7247,7 @@ struct url_aggregator : url_base {
+   ada_really_inline uint32_t replace_and_resize(uint32_t start, uint32_t end,
+                                                 std::string_view input);
+   [[nodiscard]] constexpr bool has_authority() const noexcept;
+-  constexpr void set_protocol_as_file();
++  ADA_RELAXED_CONSTEXPR void set_protocol_as_file();
+   inline void set_scheme(std::string_view new_scheme) noexcept;
+   /**
+    * Fast function to set the scheme from a view with a colon in the
 @@ -7927,7 +7941,7 @@ inline void url_aggregator::clear_hash() {
    ADA_ASSERT_TRUE(validate());
  }
