@@ -72,19 +72,19 @@ export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
 if [[ $target_platform == osx-* ]]; then
   EXTRA_ARGS="--dest-os=mac --dest-cpu=arm64"
 
-  SDK_NEW="$(xcrun --sdk macosx --show-sdk-path || true)"
-  if [ -d "$SDK_NEW/usr/include/c++/v1" ]; then
-    echo "Using SDKROOT=$SDK_NEW"
-    export CONDA_BUILD_SYSROOT="$SDK_NEW"
-    export SDKROOT="$SDK_NEW"
-  else
-    echo "WARNING: only old SDK 12.1 available — modern C++20 headers missing"
-  fi
+  # SDK_NEW="$(xcrun --sdk macosx --show-sdk-path || true)"
+  # if [ -d "$SDK_NEW/usr/include/c++/v1" ]; then
+  #   echo "Using SDKROOT=$SDK_NEW"
+  #   export CONDA_BUILD_SYSROOT="$SDK_NEW"
+  #   export SDKROOT="$SDK_NEW"
+  # else
+  #   echo "WARNING: only old SDK 12.1 available — modern C++20 headers missing"
+  # fi
 
-  export MACOSX_DEPLOYMENT_TARGET=12.1
-  export CXXFLAGS="$(echo ${CXXFLAGS:-} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET -std=gnu++20 -stdlib=libc++ -D_LIBCPP_DISABLE_AVAILABILITY"
-  export CPPFLAGS="$(echo ${CPPFLAGS:-} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -D_DARWIN_C_SOURCE -isysroot $SDK_NEW"
-  export LDFLAGS="$LDFLAGS -isysroot $SDK_NEW"
+  # export MACOSX_DEPLOYMENT_TARGET=12.1
+  # export CXXFLAGS="$(echo ${CXXFLAGS:-} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET -std=gnu++20 -stdlib=libc++ -D_LIBCPP_DISABLE_AVAILABILITY"
+  # export CPPFLAGS="$(echo ${CPPFLAGS:-} | sed -E 's@-mmacosx-version-min=[^ ]*@@g') -D_DARWIN_C_SOURCE -isysroot $SDK_NEW"
+  # export LDFLAGS="$LDFLAGS -isysroot $SDK_NEW"
 fi
 
 # if [[ $target_platform == osx-* ]]; then
