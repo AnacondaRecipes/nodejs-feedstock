@@ -1,5 +1,4 @@
-c_compiler_version:        # [linux and aarch64]
-  - 12
-cxx_compiler_version:      # [linux and aarch64]
-  - 12
-  
+# c_compiler_version:        # [linux and aarch64]
+#   - 12
+# cxx_compiler_version:      # [linux and aarch64]
+#   - 12
