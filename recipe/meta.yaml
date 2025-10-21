@@ -11,9 +11,9 @@ source:
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
   sha256: adc1a2d5ca79c92e94f3a58c3ec0efa76bdb488769ba4d4b50990e4c84896060  # [win]
   patches:   # [not win]
-    - patches/0001-stop-removing-librt.patch
-    - patches/0002-include-obj-name-in-shared-intermediate.patch
-    - patches/0003-Forward-ceilf-floorf.patch
+    - patches/0001-stop-removing-librt.patch                      # [not win]
+    - patches/0002-include-obj-name-in-shared-intermediate.patch  # [not win]
+    - patches/0003-Forward-ceilf-floorf.patch                     # [not win]
 
 build:
   number: 0

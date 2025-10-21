@@ -1,21 +1,17 @@
 #!/usr/bin/env bash
 
+export CC=${CC:-clang}
+export CXX=${CXX:-clang++}
+export LINK="${CXX}"
+
+export PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig:${PKG_CONFIG_PATH:-}"
+export PKG_CONFIG="${PKG_CONFIG:-pkg-config}"
+
+export CXXFLAGS="${CXXFLAGS:-} -stdlib=libc++"
+export LDFLAGS="${LDFLAGS:-} -stdlib=libc++ -L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib -lc++"
+
 # scrub -std=... flag which conflicts with builds
 export CXXFLAGS=$(echo ${CXXFLAGS:-} | sed -E 's@\-std=[^ ]*@@g')
-
-if [[ "$target_platform" != osx-* ]]; then
-    # need librt for clock_gettime with nodejs >= 12.12
-    export LDFLAGS="$LDFLAGS -lrt"
-
-    # https://github.com/nodejs/node/issues/52223
-    sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
-    sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
-fi
-
-export CC_host=$CC_FOR_BUILD
-export CXX_host=$CXX_FOR_BUILD
-export AR_host=$($CC_FOR_BUILD -print-prog-name=ar)
-export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
 
 EXTRA_ARGS=
 
@@ -27,6 +23,20 @@ if [[ "$target_platform" == osx-* ]]; then
   export CFLAGS="$CFLAGS -Wno-nullability-completeness"
   export CXXFLAGS="$CXXFLAGS -Wno-nullability-completeness"
 fi
+
+if [[ "$target_platform" == linux-* ]]; then
+   # need librt for clock_gettime with nodejs >= 12.12
+  export LDFLAGS="$LDFLAGS -lrt"
+  # fixes for cares on some Linux
+  # https://github.com/nodejs/node/issues/52223
+  sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
+  sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
+fi
+
+export CC_host=$CC_FOR_BUILD
+export CXX_host=$CXX_FOR_BUILD
+export AR_host=$($CC_FOR_BUILD -print-prog-name=ar)
+export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
 
 # === macOS SDK override for modern C++20 headers ===
 # The default Anaconda toolchain still points to MacOSX12.1.sdk,
@@ -48,7 +58,7 @@ if [[ $target_platform == osx-* ]]; then
 
   SDK_NEW="$(xcrun --sdk macosx --show-sdk-path || true)"
   if [ -d "$SDK_NEW/usr/include/c++/v1" ]; then
-    echo "Using SDKROOT=$SDKROOT"
+    echo "Using SDKROOT=$SDK_NEW"
     export CONDA_BUILD_SYSROOT="$SDK_NEW"
     export SDKROOT="$SDK_NEW"
   else
@@ -71,8 +81,7 @@ fi
     --with-intl=system-icu \
     ${EXTRA_ARGS}
 
-
-ninja -C out/Release -j${CPU_COUNT}
+ninja -C out/Release -j"${CPU_COUNT:-2}" -v
 
 if [[ "$target_platform" != osx-* ]]; then
   cp out/Release/lib/libnode.* out/Release/
