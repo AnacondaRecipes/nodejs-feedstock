@@ -1,17 +1,9 @@
 #!/usr/bin/env bash
 
-# export CC=${CC:-clang}
-# export CXX=${CXX:-clang++}
-# export LINK="${CXX}"
-
-# export PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig:${PKG_CONFIG_PATH:-}"
-# export PKG_CONFIG="${PKG_CONFIG:-pkg-config}"
-
 # scrub -std=... flag which conflicts with builds
 export CXXFLAGS=$(echo ${CXXFLAGS:-} | sed -E 's@\-std=[^ ]*@@g')
 
 if [[ "$target_platform" == linux-* ]]; then
-  # подчистить любые следы macOS-специфичных флагов, вдруг пришли из внешней среды
   export CXXFLAGS="$(echo "${CXXFLAGS:-}" | sed -E 's@-stdlib=libc\+\+@@g')"
   export LDFLAGS="$(echo "${LDFLAGS:-}" | sed -E 's@-stdlib=libc\+\+@@g' \
                                        | sed -E 's@-lc\+\+abi@@g' \
@@ -52,21 +44,6 @@ export CXX_host=$CXX_FOR_BUILD
 export AR_host=$($CC_FOR_BUILD -print-prog-name=ar)
 export LDFLAGS_host="$(echo $LDFLAGS | sed s@${PREFIX}@${BUILD_PREFIX}@g)"
 
-# === macOS SDK override for modern C++20 headers ===
-# The default Anaconda toolchain still points to MacOSX12.1.sdk,
-# which does not include full C++20 standard library headers
-# (e.g. <concepts>, <ranges>, <bit>, make_unique_for_overwrite, etc.).
-#
-# V8 (used by Node.js >= 20) requires these newer C++20 features,
-# so building against SDK 12.1 fails with "fatal error: 'memory' file not found"
-# and "expected concept name" errors.
-#
-# To fix this, we explicitly override CONDA_BUILD_SYSROOT / SDKROOT
-# to use the newer system SDK (MacOSX13+)
-#
-# This keeps compatibility with the defaults toolchain while allowing
-# Node.js to build successfully with modern libc++ headers.
-
 if [[ $target_platform == osx-* ]]; then
   EXTRA_ARGS="--dest-os=mac --dest-cpu=arm64"
 fi
@@ -81,7 +58,7 @@ fi
     --with-intl=system-icu \
     ${EXTRA_ARGS}
 
-ninja -C out/Release -j"${CPU_COUNT:-2}"
+ninja -C out/Release -k 200 -j"${CPU_COUNT:-2}"
 
 if [[ "$target_platform" != osx-* ]]; then
   cp out/Release/lib/libnode.* out/Release/
