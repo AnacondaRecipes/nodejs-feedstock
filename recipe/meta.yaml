@@ -46,7 +46,6 @@ requirements:
     - python                 # [not win]
     - ninja                  # [not win]
     - pkg-config             # [not win]
-    - patch                  # [not win]
   host:
     - icu {{ icu }}
     - openssl {{ openssl }}  # [not win]
