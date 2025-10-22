@@ -23,8 +23,6 @@ if [[ "$target_platform" == osx-* ]]; then
 fi
 
 if [[ "$target_platform" == linux-* ]]; then
-   # need librt for clock_gettime with nodejs >= 12.12
-  # export LDFLAGS="$LDFLAGS -lrt"
   # fixes for cares on some Linux
   # https://github.com/nodejs/node/issues/52223
   sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
