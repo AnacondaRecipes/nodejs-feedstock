@@ -53,7 +53,7 @@ ninja -C out/Release -k 200 -j"${CPU_COUNT:-2}"
 if [[ "$target_platform" != osx-* ]]; then
   cp out/Release/lib/libnode.* out/Release/
 fi
-python tools/install.py install --dest-dir ${PREFIX} --prefix ''
+$PYTHON tools/install.py install --dest-dir ${PREFIX} --prefix ''
 cp out/Release/node $PREFIX/bin
 
 if [[ "$target_platform" != osx-* ]]; then
