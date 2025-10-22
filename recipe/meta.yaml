@@ -88,6 +88,8 @@ about:
   dev_url: https://github.com/nodejs/node
 
 extra:
+  skip-lints:
+    - patch_unnecessary
   recipe-maintainers:
     - minrk
     - msarahan
