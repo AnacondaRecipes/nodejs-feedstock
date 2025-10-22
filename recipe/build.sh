@@ -4,7 +4,8 @@
 export CXXFLAGS=$(echo ${CXXFLAGS:-} | sed -E 's@\-std=[^ ]*@@g')
 
 if [[ "$target_platform" == linux-* ]]; then
-  export CXXFLAGS="$(echo "${CXXFLAGS:-}" | sed -E 's@-stdlib=libc\+\+@@g')"
+  export CFLAGS="${CFLAGS} -std=gnu17"
+  export CXXFLAGS="$(echo "${CXXFLAGS:-}" | sed -E 's@-stdlib=libc\+\+@@g') -std=gnu++20"
   export LDFLAGS="$(echo "${LDFLAGS:-}" | sed -E 's@-stdlib=libc\+\+@@g' \
                                        | sed -E 's@-lc\+\+abi@@g' \
                                        | sed -E 's@-lc\+\+@@g')"
@@ -12,7 +13,6 @@ if [[ "$target_platform" == linux-* ]]; then
 fi
 
 EXTRA_ARGS=
-
 # Tame warnings from OpenSSL 3.x (deprecated) and nullability (Clang on macOS)
 # Prevent treat warning as errors on different compilers
 export CFLAGS="${CFLAGS:-} -Wno-deprecated-declarations"
@@ -27,14 +27,6 @@ if [[ "$target_platform" == linux-* ]]; then
   # https://github.com/nodejs/node/issues/52223
   sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
   sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
-fi
-
-if [[ "$target_platform" == linux-* ]]; then
-  export CFLAGS="${CFLAGS} -std=gnu17"
-  export CXXFLAGS="$(echo "${CXXFLAGS}" | sed -E 's@\-stdlib=libc\+\+@@g') -std=gnu++20"
-  export LDFLAGS="$(echo "${LDFLAGS}" | sed -E 's@\-stdlib=libc\+\+@@g')"
-
-  # EXTRA_ARGS+="--dest-os=linux --dest-cpu=arm64"
 fi
 
 export CC_host=$CC_FOR_BUILD

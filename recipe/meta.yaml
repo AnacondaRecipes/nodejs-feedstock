@@ -1,4 +1,20 @@
-# {% set version = "23.11.1" %}
+# NOTE:
+# This build includes temporary workarounds for Linux platforms due to the lack
+# of an up-to-date C++20-compliant compiler in the default conda toolchain.
+# The current GCC 11.2.0 toolchain provided in the defaults channel is missing
+# several C++20 library features (such as relaxed constexpr and ranges support),
+# which causes build failures in Node.js’s embedded dependencies (notably the
+# Ada URL library and related headers).
+#
+# To ensure successful compilation, we patched parts of the source tree
+# (e.g. ada.h, ada.cpp, node_options.cc) to disable or inline problematic
+# constexpr constructs and adjust missing APIs, effectively allowing the
+# project to build with GCC 11 while preserving runtime compatibility.
+#
+# Once GCC >= 12 becomes available in the channel (providing full libstdc++20
+# support), these patches should be removed and the package should be rebuilt
+# cleanly without local modifications.
+
 {% set version = "24.10.0" %}
 
 package:
@@ -6,19 +22,11 @@ package:
   version: {{ version }}
 
 source:
-  # checksums from https://nodejs.org/dist/vX.Y.Z/SHASUMS256.txt.asc
-  # url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  # sha256: 75509306732090bfa99b004d097909315f7789badb4a495e82b5f17b6329247a  # [unix]
-  # url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  # sha256: d22640060e1911efaede4ecc5820f94b613bc196868289cd34f56d46e4709b71  # [win]
-
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
   sha256: fb9aa1938aa8d7b53e437184e4c5b26823db0afb5ac1cbfe6559176531e900e6  # [unix]
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
   sha256: adc1a2d5ca79c92e94f3a58c3ec0efa76bdb488769ba4d4b50990e4c84896060  # [win]
-
   patches:   # [not win]
-    # - patches/0001-fix-min-macosx-sdk-ver.patch                       # [not win]
     - patches/0001-fix-min-macosx-sdk-ver-for-nodejs-24.10.0.patch  # [not win]
     - patches/0002-include-obj-name-in-shared-intermediate.patch    # [not win]
     - patches/0003-Forward-ceilf-floorf.patch                       # [not win]
@@ -75,7 +83,7 @@ test:
     - NMV=$(node -p "process.versions.modules") && test -f "$PREFIX/lib/libnode.so.${NMV}"     # [linux]
 
 about:
-  home: https://nodejs.org/
+  home: https://nodejs.org
   license: MIT
   license_family: MIT
   license_file: LICENSE
@@ -84,7 +92,7 @@ about:
     Node.js is an open-source, cross-platform JavaScript runtime environment.
     As an asynchronous event-driven JavaScript runtime, Node.js is designed to
     build scalable network applications.
-  doc_url: https://nodejs.org/en/docs/
+  doc_url: https://nodejs.org/docs/latest/api
   dev_url: https://github.com/nodejs/node
 
 extra:
