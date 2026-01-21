@@ -1,37 +1,19 @@
-# NOTE:
-# This build includes temporary workarounds for Linux platforms due to the lack
-# of an up-to-date C++20-compliant compiler in the default conda toolchain.
-# The current GCC 11.2.0 toolchain provided in the defaults channel is missing
-# several C++20 library features (such as relaxed constexpr and ranges support),
-# which causes build failures in Node.js’s embedded dependencies (notably the
-# Ada URL library and related headers).
-#
-# To ensure successful compilation, we patched parts of the source tree
-# (e.g. ada.h, ada.cpp, node_options.cc) to disable or inline problematic
-# constexpr constructs and adjust missing APIs, effectively allowing the
-# project to build with GCC 11 while preserving runtime compatibility.
-#
-# Once GCC >= 12 becomes available in the channel (providing full libstdc++20
-# support), these patches should be removed and the package should be rebuilt
-# cleanly without local modifications.
-
-{% set version = "24.10.0" %}
+{% set name = "nodejs" %}
+{% set version = "24.13.0" %}
 
 package:
-  name: nodejs
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: fb9aa1938aa8d7b53e437184e4c5b26823db0afb5ac1cbfe6559176531e900e6  # [unix]
-  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: adc1a2d5ca79c92e94f3a58c3ec0efa76bdb488769ba4d4b50990e4c84896060  # [win]
+  url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
+  sha256: 54cb58921b4ce2831c6690ee823a3d39cfbf2b75f4e556c4c2bde90f3d8fd1ca  # [unix]
+  url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
+  sha256: ca2742695be8de44027d71b3f53a4bdb36009b95575fe1ae6f7f0b5ce091cb88  # [win]
   patches:   # [not win]
     - patches/0001-fix-min-macosx-sdk-ver-for-nodejs-24.10.0.patch  # [not win]
     - patches/0002-include-obj-name-in-shared-intermediate.patch    # [not win]
     - patches/0003-Forward-ceilf-floorf.patch                       # [not win]
-    - patches/0005-fix-ada-constexpr.patch                          # [linux]
-    - patches/0006-fix-range-gcc11-workaround.patch                 # [linux]
 
 build:
   number: 0
@@ -51,7 +33,7 @@ requirements:
     - openssl {{ openssl }}  # [not win]
     - zlib {{ zlib }}        # [not win]
   run:
-    - {{ pin_compatible('icu') }}
+    - icu
     - openssl                # [not win]
     - zlib                   # [not win]
 
