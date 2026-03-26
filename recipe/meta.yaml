@@ -1,5 +1,5 @@
 {% set name = "nodejs" %}
-{% set version = "24.13.0" %}
+{% set version = "25.8.2" %}
 
 package:
   name: {{ name }}
@@ -7,9 +7,9 @@ package:
 
 source:
   url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: 54cb58921b4ce2831c6690ee823a3d39cfbf2b75f4e556c4c2bde90f3d8fd1ca  # [unix]
+  sha256: 10335f268f7ffacd4f2b4f48d91dc5b19b1577a2861248ca414614ea24ebee65  # [unix]
   url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: ca2742695be8de44027d71b3f53a4bdb36009b95575fe1ae6f7f0b5ce091cb88  # [win]
+  sha256: 51815d5b0256b947d27d614de04060fcfdbdb830d2c86e63e6f33dbf7964cca7  # [win]
   patches:   # [not win]
     - patches/0001-fix-min-macosx-sdk-ver-for-nodejs-24.10.0.patch  # [not win]
     - patches/0002-include-obj-name-in-shared-intermediate.patch    # [not win]
