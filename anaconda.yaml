@@ -1,5 +1,5 @@
 anaconda_config_version: 1
 upstream_sources:
   - webpage:
-      url: https://nodejs.org/dist/v{}/node-v{}.tar.gz
+      url: https://nodejs.org/en/download/
       regex: node-v([\d.]+)\.tar\.gz
