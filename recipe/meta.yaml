@@ -29,13 +29,14 @@ requirements:
     - ninja                  # [not win]
     - pkg-config             # [not win]
   host:
-    - icu {{ icu }}
+    - icu {{ icu }}          # [not win]
     - openssl {{ openssl }}  # [not win]
     - zlib {{ zlib }}        # [not win]
   run:
-    - icu
+    - icu                    # [not win]
     - openssl                # [not win]
     - zlib                   # [not win]
+    - ucrt                   # [win]
 
 test:
   requires:
