@@ -14,6 +14,7 @@ source:
     - patches/0001-fix-min-macosx-sdk-ver-for-nodejs-26.4.0.patch  # [not win]
     - patches/0002-include-obj-name-in-shared-intermediate.patch    # [not win]
     - patches/0003-Forward-ceilf-floorf.patch                       # [not win]
+    - patches/0004-Support-System-abseil-cpp.patch                 # [not win]
 
 build:
   number: 0
@@ -26,9 +27,10 @@ requirements:
     - {{ compiler('c') }}    # [not win]
     - {{ compiler('cxx') }}  # [not win]
     - python                 # [not win]
-    - ninja                  # [not win]
+    - ninja-base             # [not win]
     - pkg-config             # [not win]
   host:
+    - libabseil              # [not win]
     - icu {{ icu }}          # [not win]
     - openssl {{ openssl }}  # [not win]
     - zlib {{ zlib }}        # [not win]
