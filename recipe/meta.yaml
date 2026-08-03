@@ -1,5 +1,5 @@
 {% set name = "nodejs" %}
-{% set version = "26.4.0" %}
+{% set version = "26.5.1" %}
 
 package:
   name: {{ name }}
@@ -7,14 +7,13 @@ package:
 
 source:
   url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: b1d9ebb2f4bea2058f2d105710d8cffbd1af3c0c5c690b1886ce54df098bea16  # [unix]
+  sha256: 1143281232fc4640188aaa20afb0f9c4f06031f554cd3f1e5ac86e8a0387511a  # [unix]
   url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: 5f87d038c6ec442aa46b9126f8ca170acbd2f3b9b9152ca798cf54596a31e214  # [win]
+  sha256: c432c996b95cbf7568f13a0fbb37526de84a27e3a5c520c3be15f05a9a168212  # [win]
   patches:   # [not win]
-    - patches/0001-fix-min-macosx-sdk-ver-for-nodejs-26.4.0.patch  # [not win]
+    - patches/0001-fix-min-macosx-sdk-ver.patch  # [not win]
     - patches/0002-include-obj-name-in-shared-intermediate.patch    # [not win]
-    - patches/0003-Forward-ceilf-floorf.patch                       # [not win]
-    - patches/0004-Support-System-abseil-cpp.patch                 # [not win]
+    - patches/0003-Support-System-abseil-cpp.patch                 # [not win]
 
 build:
   number: 0
@@ -30,7 +29,7 @@ requirements:
     - ninja-base             # [not win]
     - pkg-config             # [not win]
   host:
-    - libabseil              # [not win]
+    - libabseil {{ libabseil }}  # [not win]
     - icu {{ icu }}          # [not win]
     - openssl {{ openssl }}  # [not win]
     - zlib {{ zlib }}        # [not win]
