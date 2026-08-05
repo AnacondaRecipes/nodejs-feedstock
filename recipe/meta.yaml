@@ -39,7 +39,7 @@ requirements:
     - icu                    # [not win]
     - openssl                # [not win]
     - zlib                   # [not win]
-    - ucrt                   # [win]
+    - ucrt                   # [win and x86_64]
 
 test:
   requires:
