@@ -11,8 +11,10 @@ source:
   # checksums from https://nodejs.org/dist/vX.Y.Z/SHASUMS256.txt.asc
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
   sha256: 409bda5f1896c7c20866610d778d1760991884ad2e7940837cd3f2854cf73747  # [unix]
-  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: e323fff0aba197090faabd29c4c23f334557ff24454324f0c83faa7e399dbb74  # [win]
+  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win and x86_64]
+  sha256: e323fff0aba197090faabd29c4c23f334557ff24454324f0c83faa7e399dbb74  # [win and x86_64]
+  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-arm64.zip  # [win and arm64]
+  sha256: ccbee71708ae6ac7dd30dd3db6447eba4aa3009db7408defbd660cedf01fd011  # [win and arm64]
   patches:  # [not win]
     - linux-librt.patch  # [not win]
     - cinttypes.patch  # [linux]
@@ -20,7 +22,7 @@ source:
     - 0001-Forward-ceilf-floorf.patch  # [not win]
 
 build:
-  number: 0
+  number: 1
   # Anaconda doesn't provide nodejs on s390x because it's not included in SOW packages
   skip: True  # [s390x]
   # Prefix replacement breaks in the binary embedded configurations.
