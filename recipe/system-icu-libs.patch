@@ -1,6 +1,6 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: AnacondaRecipes <noreply@anaconda.com>
-Date: Thu, 17 Sep 2026 00:00:00 +0000
+From 1a7b6f44043c08af7b00feaaa1f376486c70b121 Mon Sep 17 00:00:00 2001
+From: Eric Lundby <elundby@anaconda.com>
+Date: Thu, 17 Sep 2026 15:25:21 -0600
 Subject: [PATCH] link icuuc and icudata explicitly with system icu
 
 icu-i18n.pc declares "Requires.private: icu-uc", so
@@ -12,9 +12,11 @@ not resolve executable undefined symbols via libicui18n's own
 dependency on libicuuc -- either way those symbols end up
 undefined at link time.
 ---
+ configure.py | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/configure.py b/configure.py
-index bbb38a1..8b230ed 100755
+index bbb38a16..8b230edc 100755
 --- a/configure.py
 +++ b/configure.py
 @@ -1861,6 +1861,15 @@ def configure_intl(o):
@@ -34,4 +36,5 @@ index bbb38a1..8b230ed 100755
        stripped_flags = [flag.strip() for flag in cflags.split('-I')]
        o['include_dirs'] += [flag for flag in stripped_flags if flag]
 -- 
-2.39.0
+2.50.1 (Apple Git-155)
+
