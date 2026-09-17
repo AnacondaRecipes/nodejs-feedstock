@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: AnacondaRecipes <noreply@anaconda.com>
+Date: Thu, 17 Sep 2026 00:00:00 +0000
+Subject: [PATCH] link icuuc and icudata explicitly with system icu
+
+icu-i18n.pc declares "Requires.private: icu-uc", so
+"pkg-config --libs-only-l icu-i18n" returns only -licui18n.
+v8's gen-regexp-special-case references icuuc symbols
+(icu_78::UnicodeSet / UnicodeString) directly. On Linux
+-Wl,--as-needed drops the unused -licui18n, and on macOS ld does
+not resolve executable undefined symbols via libicui18n's own
+dependency on libicuuc -- either way those symbols end up
+undefined at link time.
+---
+
+diff --git a/configure.py b/configure.py
+index bbb38a1..8b230ed 100755
+--- a/configure.py
++++ b/configure.py
+@@ -1861,6 +1861,15 @@ def configure_intl(o):
+       o['libraries'] += [libpath]
+     # safe to split, cannot contain spaces
+     o['libraries'] += libs.split()
++    # icu-i18n.pc may declare "Requires.private: icu-uc", in which case
++    # "pkg-config --libs-only-l icu-i18n" omits -licuuc. v8's
++    # gen-regexp-special-case references icuuc symbols directly; on Linux
++    # --as-needed then drops the unused -licui18n, and on macOS ld does
++    # not resolve undefined symbols via libicui18n's own dependency on
++    # libicuuc -- either way the link fails. Link icuuc/icudata directly.
++    for icu_lib in ['-licuuc', '-licudata']:
++      if icu_lib not in o['libraries']:
++        o['libraries'] += [icu_lib]
+     if cflags:
+       stripped_flags = [flag.strip() for flag in cflags.split('-I')]
+       o['include_dirs'] += [flag for flag in stripped_flags if flag]
+-- 
+2.39.0
