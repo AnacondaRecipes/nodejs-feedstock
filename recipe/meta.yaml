@@ -39,7 +39,7 @@ requirements:
     - pkg-config             # [not win]
     # libuv is a bootstrap dependency in js2c
     # starting with 20.3 (https://github.com/nodejs/node/pull/46997)
-    - libuv 1.48
+    - libuv 1.48             # [not win]
   host:
     - icu {{ icu }}
     # The introduction of the uv_pipe_bind2 and uv_pipe_connect2 methods in
