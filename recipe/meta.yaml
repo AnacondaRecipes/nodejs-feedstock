@@ -1,4 +1,4 @@
-{% set version = "20.17.0" %}
+{% set version = "20.20.2" %}
 
 # NODE_MODULE_VERSION set in src/node_version.h
 {% set NODE_MODULE_VERSION = 115 %}
@@ -10,11 +10,14 @@ package:
 source:
   # checksums from https://nodejs.org/dist/vX.Y.Z/SHASUMS256.txt.asc
   url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: 409bda5f1896c7c20866610d778d1760991884ad2e7940837cd3f2854cf73747  # [unix]
-  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: e323fff0aba197090faabd29c4c23f334557ff24454324f0c83faa7e399dbb74  # [win]
+  sha256: 8cb85a81f75169eb811f7b2512cf17a646826430debbe016a7461f31e286fdef  # [unix]
+  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win and x86_64]
+  sha256: dc3700fdd57a63eedb8fd7e3c7baaa32e6a740a1b904167ff4204bc68ed8bf77  # [win and x86_64]
+  url: https://nodejs.org/dist/v{{ version }}/node-v{{ version }}-win-arm64.zip  # [win and arm64]
+  sha256: d5c5b1d56f7f9469830eb1f57efeec0a6a9078c0a9e88cd5b4b4b48f46c22069  # [win and arm64]
   patches:  # [not win]
     - linux-librt.patch  # [not win]
+    - system-icu-libs.patch  # [not win]
     - cinttypes.patch  # [linux]
     - less-shared-intermediate.patch  # [not win]
     - 0001-Forward-ceilf-floorf.patch  # [not win]
@@ -28,15 +31,15 @@ build:
 
 requirements:
   build:
+    - {{ stdlib('c') }}      # [not win]
     - {{ compiler('c') }}    # [not win]
     - {{ compiler('cxx') }}  # [not win]
     - python 3.8             # [not win]
     - ninja-base             # [not win]
     - pkg-config             # [not win]
-    - patch                  # [not win]
     # libuv is a bootstrap dependency in js2c
     # starting with 20.3 (https://github.com/nodejs/node/pull/46997)
-    - libuv 1.48
+    - libuv 1.48             # [not win]
   host:
     - icu {{ icu }}
     # The introduction of the uv_pipe_bind2 and uv_pipe_connect2 methods in
@@ -68,7 +71,7 @@ test:
     - test -f $PREFIX/lib/libnode.so.{{ NODE_MODULE_VERSION }}  # [linux]
 
 about:
-  home: https://nodejs.org/
+  home: https://nodejs.org
   license: MIT
   license_family: MIT
   license_file: LICENSE
