@@ -1,5 +1,17 @@
 anaconda_config_version: 1
 upstream_sources:
-  - webpage:
-      url: https://nodejs.org/en/download/
-      regex: node-v([\d.]+)\.tar\.gz
+  - github:
+      identifier: nodejs/node
+      use_max_tag: true
+      include_regex: ^v\d+(?:\.\d+)+$
+      from_pattern: ^v(.+)$
+      to_pattern: \1
+  - github:
+      identifier: nodejs/node
+      use_max_tag: true
+      include_regex: ^v24\.\d+(?:\.\d+)+$
+      from_pattern: ^v(.+)$
+      to_pattern: \1
+    feedstock_branch: '24.x'
+    version_matchspec: '>=24,<25'
+    supported: true
