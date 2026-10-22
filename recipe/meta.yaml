@@ -1,5 +1,5 @@
 {% set name = "nodejs" %}
-{% set version = "26.5.1" %}
+{% set version = "26.12.1" %}
 
 package:
   name: {{ name }}
@@ -7,18 +7,18 @@ package:
 
 source:
   url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: 1143281232fc4640188aaa20afb0f9c4f06031f554cd3f1e5ac86e8a0387511a  # [unix]
+  sha256: 717244a8d757672ec86aae5077fca31e50f84b094441ec51bdf397aab12c304e  # [unix]
   url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win and x86_64]
-  sha256: c432c996b95cbf7568f13a0fbb37526de84a27e3a5c520c3be15f05a9a168212  # [win and x86_64]
+  sha256: b3efd5c70cba3308ed46e7e699a9b8aac075bbc6b027fcb39c84c31acc25e2b4  # [win and x86_64]
   url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}-win-arm64.zip  # [win and arm64]
-  sha256: 467f425228a2fdcc83a330f5f38b124b5b43b42f5033d7848b4e47c9becc36f9  # [win and arm64]
+  sha256: 34567581ee63967b37afb6b7a0cc63a2d550a43d5d838adb75982d7e356f2e2c  # [win and arm64]
   patches:   # [not win]
     - patches/0001-fix-min-macosx-sdk-ver.patch  # [not win]
     - patches/0002-include-obj-name-in-shared-intermediate.patch    # [not win]
     - patches/0003-Support-System-abseil-cpp.patch                 # [not win]
 
 build:
-  number: 1
+  number: 0
   # Prefix replacement breaks in the binary embedded configurations.
   detect_binary_files_with_prefix: false
 
