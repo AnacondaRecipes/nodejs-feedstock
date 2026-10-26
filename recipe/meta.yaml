@@ -1,5 +1,5 @@
 {% set name = "nodejs" %}
-{% set version = "24.13.0" %}
+{% set version = "24.22.1" %}
 
 package:
   name: {{ name }}
@@ -7,9 +7,11 @@ package:
 
 source:
   url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: 54cb58921b4ce2831c6690ee823a3d39cfbf2b75f4e556c4c2bde90f3d8fd1ca  # [unix]
-  url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win]
-  sha256: ca2742695be8de44027d71b3f53a4bdb36009b95575fe1ae6f7f0b5ce091cb88  # [win]
+  sha256: 001773d9bd53fbd27a25efd42aa6a9693ebfe500998ca9bec635e9b6ee79bc91  # [unix]
+  url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win and x86_64]
+  sha256: d2046d28c2c3dcd211ac5145c0bf30e2047ef9dfb306693c8c6e2eccd8b95fa5  # [win and x86_64]
+  url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}-win-arm64.zip  # [win and arm64]
+  sha256: a0c807319fede24c4a0d8f84564c82a619bd313b16b10c007c383c2609e99171  # [win and arm64]
   patches:   # [not win]
     - patches/0001-fix-min-macosx-sdk-ver-for-nodejs-24.10.0.patch  # [not win]
     - patches/0002-include-obj-name-in-shared-intermediate.patch    # [not win]
@@ -26,16 +28,17 @@ requirements:
     - {{ compiler('c') }}    # [not win]
     - {{ compiler('cxx') }}  # [not win]
     - python                 # [not win]
-    - ninja                  # [not win]
+    - ninja-base             # [not win]
     - pkg-config             # [not win]
   host:
-    - icu {{ icu }}
+    - icu {{ icu }}          # [not win]
     - openssl {{ openssl }}  # [not win]
     - zlib {{ zlib }}        # [not win]
   run:
-    - icu
+    - icu                    # [not win]
     - openssl                # [not win]
     - zlib                   # [not win]
+    - ucrt                   # [win and x86_64]
 
 test:
   requires:
