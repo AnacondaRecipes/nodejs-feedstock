@@ -1,5 +1,5 @@
 {% set name = "nodejs" %}
-{% set version = "26.12.1" %}
+{% set version = "26.13.1" %}
 
 package:
   name: {{ name }}
@@ -7,11 +7,11 @@ package:
 
 source:
   url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}.tar.gz  # [unix]
-  sha256: 717244a8d757672ec86aae5077fca31e50f84b094441ec51bdf397aab12c304e  # [unix]
+  sha256: 60c6cdf11c3e9d5932fccd0eafae77f1152661584e129047684cb8646f228d3e  # [unix]
   url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}-win-x64.zip  # [win and x86_64]
-  sha256: b3efd5c70cba3308ed46e7e699a9b8aac075bbc6b027fcb39c84c31acc25e2b4  # [win and x86_64]
+  sha256: e2edda75bfb089654705cf65a13b58933bfd5f57148e8ebda916f58a2474f1f7  # [win and x86_64]
   url: https://{{ name }}.org/dist/v{{ version }}/node-v{{ version }}-win-arm64.zip  # [win and arm64]
-  sha256: 34567581ee63967b37afb6b7a0cc63a2d550a43d5d838adb75982d7e356f2e2c  # [win and arm64]
+  sha256: 181ebe431b90787113a9e4fc80d38ce86d37888a353a0386de44d2872e48cb97  # [win and arm64]
   patches:   # [not win]
     - patches/0001-fix-min-macosx-sdk-ver.patch  # [not win]
     - patches/0002-include-obj-name-in-shared-intermediate.patch    # [not win]
